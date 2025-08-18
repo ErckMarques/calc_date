@@ -10,3 +10,6 @@ TODO - CLI
 
 TODO - VERSAO
  1. Versionar o código com uso do git
+
+TODO - DOC
+ 1. COnstruir a documentação do projeto
