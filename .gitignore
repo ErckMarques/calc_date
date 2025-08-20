@@ -1,3 +1,6 @@
 *env/
 */__pycache__/*
 assets/
+*.egg-info/
+build/
+dist/
