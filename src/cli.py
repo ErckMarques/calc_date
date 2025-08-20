@@ -106,17 +106,4 @@ def create_parser() -> argparse.ArgumentParser:
     )
     iter_parser.set_defaults(command='iter')
 
-    ####### GUI parser
-    gui_parser = subparsers.add_parser(
-        'gui',
-        aliases=['interface', 'ui'],
-        usage='%(prog)s gui',
-        description=textwrap.dedent("""
-            Launches the graphical user interface.
-        """),
-        help="Launches the graphical user interface.",
-        formatter_class=rich_argparse.RawDescriptionRichHelpFormatter
-    )
-    gui_parser.set_defaults(command='gui')
-
     return parser

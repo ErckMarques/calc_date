@@ -25,6 +25,9 @@ classifiers = [
 [project.scripts]
 dtcalc = "src.__main__:main"
 
+[project.gui-scripts]
+dtcalc-gui = "src.gui:main"
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["*"]

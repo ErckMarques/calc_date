@@ -195,7 +195,10 @@ def _add_numeric_validation(e: Event) -> None:
         return "break"  # Prevent the event from propagating
     return None
 
-if __name__ == "__main__":
+def main() -> None:
+    """
+    Main function to create and run the GUI application.
+    """
     import locale
     import sys
 
@@ -208,3 +211,6 @@ if __name__ == "__main__":
 
     app = create_gui()
     app.mainloop()
+
+if __name__ == "__main__":
+    main()

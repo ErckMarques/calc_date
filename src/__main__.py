@@ -21,5 +21,3 @@ def main():
 
     elif args.command in ['iter', 'initialize', 'init', 'iterative', 'ini']:
         runner.enter_interactive_mode()
-    elif args.command in ['gui', 'interface', 'ui']:
-        runner.launch_gui()
