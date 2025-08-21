@@ -1,9 +1,11 @@
 from __future__ import annotations
 from datetime import date, timedelta
-from tkinter import Misc
+from tkinter import Misc, Event
 from typing import Callable, Literal, final, TypeAlias
+
 import ttkbootstrap as ttk
 from ttkbootstrap.tooltip import ToolTip
+from ttkbootstrap.constants import INFO, DANGER, PRIMARY
 
 from frame_date_difference import ConfigureGridLayout
 
@@ -36,11 +38,21 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
 
         self.start_date = ttk.DateEntry(frame, popup_title="Select Start Date")
         self.start_date.grid(row=0, column=0, padx=(2, 5), sticky="ew")
+        ToolTip(self.start_date, text="Select the start date", bootstyle=INFO)
 
         self.days = ttk.IntVar(name="input_days")
-        ttk.Entry(frame, textvariable=self.days).grid(row=0, column=1, padx=(0, 5), sticky="ew")
+        entry = ttk.Entry(frame, textvariable=self.days)
+        entry.bind("<FocusIn>", self._entry_event_in)
+        entry.bind("<KeyPress>", self._entry_event_out)
+        entry.bind("<Control-A>", lambda e: entry.selection_range(0, ttk.END))
+        entry.bind("<Control-a>", lambda e: entry.selection_range(0, ttk.END))
+        entry.bind("<Escape>", lambda e: self.winfo_toplevel().focus_set())
+        entry.grid(row=0, column=1, padx=(0, 5), sticky="ew")
+        ToolTip(entry, text="Enter the number of days", bootstyle=INFO)
 
-        ttk.Button(frame, text="Calculate", command=self._calculate).grid(row=0, column=2, padx=(0, 2), sticky="ew")
+        btn = ttk.Button(frame, text="Calculate", command=self._calculate)
+        btn.grid(row=0, column=2, padx=(0, 2), sticky="ew")
+        ToolTip(btn, text="Calculate the new date", bootstyle=INFO)
 
     def _create_label_response(self) -> None:
         frame = ttk.Frame(self)
@@ -50,6 +62,20 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
 
         self.result_var = ttk.StringVar(name="date_with_interval_response", value=date.today().strftime("%A, %d de %B de %Y").capitalize())
         ttk.Label(frame, textvariable=self.result_var).pack(side="left", padx=(5, 0))
+
+    def _entry_event_in(self, e: Event) -> None:
+        if isinstance(e.widget, ttk.Entry):
+            e.widget.delete(0, ttk.END)
+
+
+    def _entry_event_out(self, e: Event) -> None:
+        if e.char and not e.char.isdigit() and e.char not in ('\b', '\x7f', '-'):
+            e.widget.bell()  # Optional: make a sound to indicate invalid input
+            e.widget.configure(bootstyle=DANGER)
+            return "break"  # Prevent the event from propagating
+        else:
+            e.widget.configure(bootstyle=PRIMARY)
+        return None
 
     def _calculate(self) -> None:
         start_date = self.start_date.get_date()

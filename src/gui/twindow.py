@@ -4,10 +4,15 @@ This TWindow holds all the logic related to the application's main window.
 """
 
 from typing import final
+from pathlib import Path
 
+import sys
 import pystray
 from PIL import Image
-from ttkbootstrap import Window
+from ttkbootstrap import Window, PhotoImage
+
+ICON_PATH: Path = Path(__file__).parents[2].joinpath("assets", "date_calc.png")
+
 
 @final
 class TWindow(Window):
@@ -64,6 +69,13 @@ class TWindow(Window):
         """
         self.resizable(False, False)
         self.bind("<Control-BackSpace>", lambda e: self.destroy())
+        self.bind("<Escape>", lambda e: self.focus_set())
+        if sys.platform == "win32":
+            self.iconbitmap(ICON_PATH.parent.joinpath("date_calc.ico"))
+        else:
+            # Linux and macOS
+            self.iconphoto(True, PhotoImage(file=ICON_PATH))
+
 
     def _configure_py_stray(self) -> None:
         """
@@ -76,13 +88,14 @@ class TWindow(Window):
         Handle the window close event.
         """
         self.withdraw()
-        image = Image.open("assets/clock.ico")
+        image = Image.open(ICON_PATH)
         menu = (
             pystray.MenuItem("Show", self._on_show),
             pystray.MenuItem("Exit", self._on_exit)
         )
         self.icon = pystray.Icon("Date Calculator", image, "Date Calculator", menu)
         self.icon.run()
+        self.ico = image
 
     def _on_show(self) -> None:
         """
