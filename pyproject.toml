@@ -16,6 +16,7 @@ dependencies = [
     "dateparse (>=1.4.0,<2.0.0)",
     "ttkbootstrap (>=1.14.2,<2.0.0)",
     "python-dateutil (>=2.9.0.post0,<3.0.0)",
+    "pystray (>=0.19.5,<0.20.0)",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -26,7 +27,7 @@ classifiers = [
 dtcalc = "src.__main__:main"
 
 [project.gui-scripts]
-dtcalc-gui = "src.gui:main"
+dtcalc-gui = "src.gui.__init__:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
