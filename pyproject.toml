@@ -3,7 +3,7 @@ requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
 build-backend = "poetry_dynamic_versioning.backend"
 
 [project]
-name = "date_calc"
+name = "date-calc"
 description = "Auxiliary program to calculate difference between dates and dates and interval of days."
 authors = [
     { name = "Erik Marques", email = "lucro.alternativo@outlook.com" }
@@ -24,11 +24,10 @@ classifiers = [
 dynamic = ["version"]
 
 [project.scripts]
-dtcalc = "src.__main__:main"
+dtcalc = "date_calc.__main__:main"
 
 [project.gui-scripts]
-dtcalc-gui = "src.gui.__init__:main"
-
+dtcalc-gui = "date_calc.gui.__init__:main"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
@@ -36,7 +35,10 @@ pytest = "^8.4.1"
 [tool.poetry]
 package-mode = true
 include = ["tests/*"]
-version = "2.1.0"
+packages = [
+    {include="date_calc", from = "src"}
+]
+version = "2.0.1"
 
 [tool.poetry-dynamic-versioning]
 enable = true
