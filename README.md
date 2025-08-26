@@ -23,7 +23,7 @@ Recomenda-se a instalação via `pipx` para um isolamento adequado e disponibili
 ### Instalação Direta do GitHub (Método Recomendado)
 
 ```bash
-pipx install git+https://github.com/seu_usuario/date_calc.git
+pipx install git+https://github.com/ErckMarques/date_calc.git
 ```
 
 ### Instalação a partir de um Arquivo WHL
@@ -65,8 +65,8 @@ Este projeto é gerenciado com Poetry.
 ### Clone o repositório:
 
 ```bash
-git clone https://github.com/seu_usuario/date_calc.git
-cd date_calc
+git clone https://github.com/ErckMarques/calc_date.git
+cd calc_date
 ```
 
 ### Instale as dependências:
@@ -84,7 +84,7 @@ Para ativá-lo no terminal dedicado da sua IDE, utilize o comando abaixo que ir�
 ```bash
 poetry env activate
 ```
-Conhecendo o caminho do ambiente virtual:
+Sabendo qual é o caminho do ambiente virtual:
 ```bash
 source <path/to/the/virtualenv/of/poetry> 
 ```
