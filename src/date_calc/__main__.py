@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from .cli import create_parser
-from .runner import DefaultRunner
+from date_calc.cli import create_parser
+from date_calc.runner import DefaultRunner
 
 
 def main():

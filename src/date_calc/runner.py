@@ -19,6 +19,8 @@ class DefaultRunner:
         print("Mode under development.")
     
     def launch_gui(self) -> None:
-        from .gui import create_gui
-        app = create_gui()
-        app.mainloop()
+        from date_calc.gui import main
+        
+        main()
+    
+    def _calculate_working_days(self): ...
