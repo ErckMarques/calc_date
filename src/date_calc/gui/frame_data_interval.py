@@ -7,7 +7,7 @@ import ttkbootstrap as ttk
 from ttkbootstrap.tooltip import ToolTip
 from ttkbootstrap.constants import INFO, DANGER, PRIMARY
 
-from frame_date_difference import ConfigureGridLayout
+from date_calc.gui.frame_date_difference import ConfigureGridLayout
 
 TKContainer: TypeAlias = ttk.Window | ttk.Frame | ttk.Labelframe
 

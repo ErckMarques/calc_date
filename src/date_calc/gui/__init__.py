@@ -1,9 +1,9 @@
 
 def main():
-    from twindow import TWindow
-    from frame_date_difference import FrameDateDifference
-    from frame_data_interval import FrameDateWithInterval
-    from src import config_locale_app
+    from date_calc.gui.twindow import TWindow
+    from date_calc.gui.frame_date_difference import FrameDateDifference
+    from date_calc.gui.frame_data_interval import FrameDateWithInterval
+    from date_calc import config_locale_app
 
     config_locale_app()
     
