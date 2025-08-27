@@ -2,20 +2,24 @@
 This file provides a TWindow class, which inherits from ttkbootstrap.Window, marked with the typing.final decorator.
 This TWindow holds all the logic related to the application's main window.
 """
-
+from textwrap import dedent
 from typing import final
 from pathlib import Path
 
 import sys
 import pystray
+import ttkbootstrap as ttk
 from PIL import Image
 from ttkbootstrap import Window, PhotoImage
 
-ICON_PATH: Path = Path(__file__).parents[2].joinpath("assets", "date_calc.png")
+from date_calc.gui.frame_date_difference import ConfigureGridLayout, FrameDateDifference
+from date_calc.gui.frame_data_interval import FrameDateWithInterval
+
+ICON_PATH: Path = Path(__file__).parents[2].joinpath("assets")
 
 
 @final
-class TWindow(Window):
+class TWindow(Window, ConfigureGridLayout):
     """
     TWindow class that extends ttkbootstrap.Window.
     This class is intended to hold all the logic related to the application's main window.
@@ -59,9 +63,9 @@ class TWindow(Window):
         # configuration
         self._configuration_of_window()
         # Add behavior to the system tray icon.
-        self._configure_py_stray()
+        # self._configure_py_stray()
         # Add widgets
-        # self._add_widgets()
+        self._add_widgets()
 
     def _configuration_of_window(self) -> None:
         """
@@ -70,11 +74,13 @@ class TWindow(Window):
         self.resizable(False, False)
         self.bind("<Control-BackSpace>", lambda e: self.destroy())
         self.bind("<Escape>", lambda e: self.focus_set())
+        # Configure grid layout for widgets
+        self.configure_grid_layout(self, rows=3, columns=1)
         if sys.platform == "win32":
-            self.iconbitmap(ICON_PATH.parent.joinpath("date_calc.ico"))
+            self.iconbitmap(ICON_PATH.joinpath("date_calc.ico"))
         else:
             # Linux and macOS
-            self.iconphoto(True, PhotoImage(file=ICON_PATH))
+            self.iconphoto(True, PhotoImage(file=ICON_PATH.joinpath("date_calc.png")))
 
 
     def _configure_py_stray(self) -> None:
@@ -111,31 +117,58 @@ class TWindow(Window):
         self.icon.stop()
         self.destroy()
 
-    def _configure_grid_layout(self) -> None:
-        """
-        Configure the grid layout for the main window.
-        """
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-
     def _add_widgets(self) -> None:
         """
         Add widgets to the main window.
         """
-        # Configure grid layout for widgets
-        self._configure_grid_layout()
+        FrameDateDifference(self).pack(pady=10, padx=10, fill="both", expand=True)
+        FrameDateWithInterval(self).pack(pady=10, padx=10, fill="both", expand=True)
+        self._add_frame_buttons()
 
+    def _add_frame_buttons(self) -> None:
+        frame = ttk.Frame(self)
+        # self.configure_grid_layout(frame, rows=1, columns=2)
+        frame.pack(pady=10, padx=10, fill="both", expand=True)
+        image = PhotoImage(name="config_icon", file=ICON_PATH.joinpath("config.png"))
+        ttk.Button(frame, text="Configuration", image=image, command=self._top_config).pack(side="left", padx=5)
+        ttk.Button(frame, text="Tray System", command=self._development).pack(side="left", padx=5)
+
+    def _development(self):
+        """open the development window"""
+        top = ttk.Toplevel(title="Development")
+        # Add development widgets here
+        top.iconbitmap(ICON_PATH.joinpath("develop.ico"))
+        ttk.Label(top, text="Development Window in development").pack(pady=20)
+
+    def _top_config(self):
+        """open the top configuration window"""
+        top = ttk.Toplevel(title="Configuration")
+        # Add configuration widgets here
+        top.iconbitmap(ICON_PATH.joinpath("config.ico"))
+        top.title("Configuration")
+        top.geometry("400x300")
+        ttk.Label(top, text="Configuration Window in development").pack(pady=20)
+        ttk.Label(
+            top, 
+            text=dedent(
+                """
+                This button opens the application's configuration page. It should be an inherited TopLevel, specialized in configuration issues.
+                    Some configuration options:
+                    - Language and localization (pt-br and english) [internationalization]
+                    - Light and dark theme change
+                    - Holiday calendar configuration:
+                        In the backend, use a specialized class to receive a JSON or CSV file of holidays, convert it, and save it as structured JSON.
+                        Also, extend the functionality of the datetime library with a simple holiday check function, "is_holiday() -> bool". 
+                        Receive more than one holiday calendar and select them from a list box (if possible).
+            """,)
+        ).pack(pady=5)
+        top.transient(self)
 
 if __name__ == "__main__":
     # Example usage of TWindow
-    try:
-        from date_calc.gui.frame_date_difference import FrameDateDifference
-        from date_calc.gui.frame_data_interval import FrameDateWithInterval
-        
-        window = TWindow(title="Date Calculator", themename="darkly")
-        FrameDateDifference(window).pack(pady=10, padx=10, fill="both", expand=True)
-        FrameDateWithInterval(window).pack(pady=10, padx=10, fill="both", expand=True)
-        window.mainloop()
+    try:       
+        app = TWindow(title="Date Calculator", themename="darkly")
+        app.mainloop()
     except KeyboardInterrupt as e:
         print("Encerrando a aplicação")
         exit(0) #? Aqui o código deve ser encerrado corretamente
