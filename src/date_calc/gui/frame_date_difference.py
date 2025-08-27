@@ -1,6 +1,7 @@
 from datetime import date
 from typing import final
 import ttkbootstrap as ttk
+from ttkbootstrap.constants import INFO
 from ttkbootstrap.tooltip import ToolTip
 from tkinter import Event
 
@@ -39,6 +40,11 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         Configure the label frame.
         """
         self.config(text="Date Difference", padding=(10, 10))
+        ToolTip(
+            self, 
+            text="Allows you to calculate the difference between two dates", 
+            bootstyle=INFO
+        )
 
     def _create_widgets(self) -> None:
         """
@@ -50,16 +56,16 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
 
     def _create_date_entry_frame(self) -> None:
         """Create a frame for date entries with two 'ttk.DateEntry' widgets."""
-        frame_dtentry = ttk.Frame(self)
-        self.configure_grid_layout(frame_dtentry, rows=1, columns=2)
-        frame_dtentry.pack(padx=10, pady=10, fill="both", expand=True)
+        frame = ttk.Frame(self)
+        self.configure_grid_layout(frame, rows=1, columns=2)
+        frame.pack(padx=10, pady=10, fill="both", expand=True)
 
-        self.start_date = ttk.DateEntry(frame_dtentry, popup_title="Select Start Date")
+        self.start_date = ttk.DateEntry(frame, popup_title="Select Start Date")
         self.start_date.entry.bind("<KeyPress>", self._on_key_press)
         self.start_date.grid(row=0, column=0, padx=(2, 5), sticky="ew")
         ToolTip(self.start_date, "Select the start date", bootstyle="info")
 
-        self.end_date = ttk.DateEntry(frame_dtentry, popup_title="Select End Date")
+        self.end_date = ttk.DateEntry(frame, popup_title="Select End Date")
         self.end_date.grid(row=0, column=1, padx=(0, 2), sticky="ew")
         ToolTip(self.end_date, "Select the end date", bootstyle="info")
 
@@ -105,6 +111,7 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         if start_date and end_date:
             delta = end_date - start_date
             self.result_var.set(f"{delta.days} days")
+            # colocar um relatório com dias úteis e finais de semana
         else:
             self.result_var.set("Invalid dates")
 
