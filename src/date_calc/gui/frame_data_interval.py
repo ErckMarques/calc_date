@@ -26,9 +26,17 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
 
     def _configure_label_frame(self) -> None:
         self.configure(text="Date with Interval", padding=(10, 5))
+        ToolTip(
+            self, 
+            text="Allows you to calculate a date from a number of calendar days or business days", 
+            bootstyle=INFO
+        )
+
 
     def _create_widgets(self) -> None:
+        """Create and arrange widgets in the frame."""
         self._create_date_with_interval_widgets()
+        self._create_frame_radio()
         self._create_label_response()
 
     def _create_date_with_interval_widgets(self) -> None:
@@ -52,7 +60,22 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
 
         btn = ttk.Button(frame, text="Calculate", command=self._calculate)
         btn.grid(row=0, column=2, padx=(0, 2), sticky="ew")
-        ToolTip(btn, text="Calculate the new date", bootstyle=INFO)
+        ToolTip(btn, text="Performs calculation between two dates", bootstyle=INFO)
+
+    def _create_frame_radio(self) -> None:
+        frame = ttk.Frame(self)
+        self.configure_grid_layout(frame, rows=1, columns=2)
+        frame.pack(padx=10, pady=10, fill="both", expand=True)
+
+        self.interval_type = ttk.StringVar(value="days")
+        ttk.Radiobutton(
+            frame, text="Consecutive Days",
+            variable=self.interval_type, value="consecutive"
+        ).grid(row=0, column=0, padx=(2, 0), sticky="w")
+        ttk.Radiobutton(
+            frame, text="Business Days",
+            variable=self.interval_type, value="business"
+        ).grid(row=0, column=1, padx=(2, 0), sticky="w")
 
     def _create_label_response(self) -> None:
         frame = ttk.Frame(self)
@@ -60,13 +83,15 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
 
         ttk.Label(frame, text="Result:").pack(side="left", padx=(2, 0))
 
-        self.result_var = ttk.StringVar(name="date_with_interval_response", value=date.today().strftime("%A, %d de %B de %Y").capitalize())
+        self.result_var = ttk.StringVar(
+            name="date_with_interval_response", 
+            value=date.today().replace(day=1).strftime("%A, %d de %B de %Y").capitalize()
+        )
         ttk.Label(frame, textvariable=self.result_var).pack(side="left", padx=(5, 0))
 
     def _entry_event_in(self, e: Event) -> None:
         if isinstance(e.widget, ttk.Entry):
             e.widget.delete(0, ttk.END)
-
 
     def _entry_event_out(self, e: Event) -> None:
         if e.char and not e.char.isdigit() and e.char not in ('\b', '\x7f', '-'):
@@ -78,10 +103,25 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
         return None
 
     def _calculate(self) -> None:
+        """Calculate the new date based on the input days and interval type."""
+        # Get the start date and number of days from the user input
         start_date = self.start_date.get_date()
         days = self.days.get()
+        # checks if there is any entry
         if start_date and days:
-            new_date = start_date + timedelta(days=days)
+            # check if the interval type is business
+            if self.interval_type.get() == "business":
+                current_date = start_date
+                added_days: int = 0  # control variable
+                # calculate the new date manually
+                while added_days < days:
+                    current_date += timedelta(days=1)
+                    # check if the current date is a weekday
+                    if current_date.weekday() < 5:
+                        added_days += 1
+                new_date = current_date
+            else:
+                new_date = start_date + timedelta(days=days)
             self.result_var.set(new_date.strftime("%A, %d de %B de %Y").capitalize())
         else:
             self.result_var.set("Invalid input")
