@@ -5,18 +5,8 @@ from ttkbootstrap.constants import INFO
 from ttkbootstrap.tooltip import ToolTip
 from tkinter import Event
 
-type TkContainer = ttk.Window | ttk.Frame | ttk.Labelframe
-
-class ConfigureGridLayout:
-    @staticmethod
-    def configure_grid_layout(container: TkContainer, *, rows: int, columns: int) -> None:
-        """
-        Configure the grid layout for the given container.
-        """
-        for col in range(columns):
-            container.grid_columnconfigure(col, weight=1)
-        for row in range(rows):
-            container.grid_rowconfigure(row, weight=1)
+from date_calc import TkContainer, ICON_PATH
+from date_calc.gui.utils.grid_layout import ConfigureGridLayout
 
 @final
 class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
@@ -57,15 +47,15 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
     def _create_date_entry_frame(self) -> None:
         """Create a frame for date entries with two 'ttk.DateEntry' widgets."""
         frame = ttk.Frame(self)
-        self.configure_grid_layout(frame, rows=1, columns=2)
+        self.configure_grid_layout(frame, rows=1, columns=3)
         frame.pack(padx=10, pady=10, fill="both", expand=True)
 
-        self.start_date = ttk.DateEntry(frame, popup_title="Select Start Date")
+        self.start_date = ttk.DateEntry(frame, popup_title="Select Start Date", startdate=date.today().replace(day=1))
         self.start_date.entry.bind("<KeyPress>", self._on_key_press)
         self.start_date.grid(row=0, column=0, padx=(2, 5), sticky="ew")
         ToolTip(self.start_date, "Select the start date", bootstyle="info")
 
-        self.end_date = ttk.DateEntry(frame, popup_title="Select End Date")
+        self.end_date = ttk.DateEntry(frame, popup_title="Select End Date", startdate=date.today().replace(day=1))
         self.end_date.grid(row=0, column=1, padx=(0, 2), sticky="ew")
         ToolTip(self.end_date, "Select the end date", bootstyle="info")
 
@@ -73,12 +63,23 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         """Create a label to display the date difference response."""
         # Container
         frame = ttk.Frame(self)
+        self.configure_grid_layout(frame, rows=1, columns=2)
         frame.pack(padx=10, pady=10, fill="both", expand=True)
 
-        ttk.Label(frame, text="Difference:").pack(side="left", padx=(2, 0))
+        # ttk.Label(frame, text="Difference:").grid(row=0, column=0, padx=(5, 0), sticky="w")
 
-        self.result_var = ttk.StringVar(name="date_difference_response", value="0 days")
-        ttk.Label(frame, textvariable=self.result_var).pack(side="left", padx=(5, 0))
+        self.result_var = ttk.StringVar(name="date_difference_response", value="Difference:  0 days")
+        ttk.Label(frame, textvariable=self.result_var).grid(row=0, column=0, padx=(5, 0), sticky="w")
+
+        image_info = ttk.PhotoImage(name="info_icon", file=ICON_PATH.joinpath("info.png")).subsample(25)
+        info = ttk.Label(frame, image=image_info)
+        info.grid(row=0, column=1, padx=(2, 0), sticky="e")
+        setattr(info, "_image_info", image_info)  # Prevent garbage collection
+        ToolTip(
+            info, 
+            text="Allows you to calculate a date from a number of calendar days or business days", 
+            bootstyle=INFO
+        )
 
     def _create_buttons(self) -> None:
         """Create buttons for calculating and resetting the date difference."""
@@ -110,12 +111,12 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         end_date = self.end_date.get_date()
         if start_date and end_date:
             delta = end_date - start_date
-            self.result_var.set(f"{delta.days} days")
+            self.result_var.set(f"Difference: {delta.days} days")
             # colocar um relatório com dias úteis e finais de semana
         else:
             self.result_var.set("Invalid dates")
 
     def _reset_date_entries(self) -> None:
-        self.start_date.set_date(date.today())
-        self.end_date.set_date(date.today())
+        self.start_date.set_date(date.today().replace(day=1))
+        self.end_date.set_date(date.today().replace(day=1))
         self.result_var.set("0 days")

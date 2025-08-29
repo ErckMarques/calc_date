@@ -9,13 +9,13 @@ from pathlib import Path
 import sys
 import pystray
 import ttkbootstrap as ttk
-from PIL import Image
+from PIL import Image, ImageTk
 from ttkbootstrap import Window, PhotoImage
 
 from date_calc.gui.frame_date_difference import ConfigureGridLayout, FrameDateDifference
 from date_calc.gui.frame_data_interval import FrameDateWithInterval
 
-ICON_PATH: Path = Path(__file__).parents[2].joinpath("assets")
+from date_calc import ICON_PATH
 
 
 @final
@@ -129,9 +129,15 @@ class TWindow(Window, ConfigureGridLayout):
         frame = ttk.Frame(self)
         # self.configure_grid_layout(frame, rows=1, columns=2)
         frame.pack(pady=10, padx=10, fill="both", expand=True)
-        image = PhotoImage(name="config_icon", file=ICON_PATH.joinpath("config.png"))
-        ttk.Button(frame, text="Configuration", image=image, command=self._top_config).pack(side="left", padx=5)
-        ttk.Button(frame, text="Tray System", command=self._development).pack(side="left", padx=5)
+
+        # fix this
+        image = Image.open(ICON_PATH.joinpath("config.png")).resize((60, 60), Image.Resampling.LANCZOS)
+        btn_config = ttk.Button(frame, image=ImageTk.PhotoImage(image), command=self._top_config)
+        setattr(btn_config, "image", image)  # keep a reference!
+        btn_config.pack(side="left", padx=5)
+
+        btn_tray = ttk.Button(frame, text="Tray System", command=self._development)
+        btn_tray.pack(side="left", padx=5)
 
     def _development(self):
         """open the development window"""
