@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from typing import final
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import INFO
@@ -30,11 +30,6 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         Configure the label frame.
         """
         self.config(text="Date Difference", padding=(10, 10))
-        ToolTip(
-            self, 
-            text="Allows you to calculate the difference between two dates", 
-            bootstyle=INFO
-        )
 
     def _create_widgets(self) -> None:
         """
@@ -63,7 +58,7 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         """Create a label to display the date difference response."""
         # Container
         frame = ttk.Frame(self)
-        self.configure_grid_layout(frame, rows=1, columns=2)
+        self.configure_grid_layout(frame, rows=1, columns=3)
         frame.pack(padx=10, pady=10, fill="both", expand=True)
 
         # ttk.Label(frame, text="Difference:").grid(row=0, column=0, padx=(5, 0), sticky="w")
@@ -71,9 +66,12 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         self.result_var = ttk.StringVar(name="date_difference_response", value="Difference:  0 days")
         ttk.Label(frame, textvariable=self.result_var).grid(row=0, column=0, padx=(5, 0), sticky="w")
 
+        self.business_days_var = ttk.StringVar(name="business_days_response", value="Business Days:  0")
+        ttk.Label(frame, textvariable=self.business_days_var).grid(row=0, column=1, padx=(5, 0), sticky="w")
+
         image_info = ttk.PhotoImage(name="info_icon", file=ICON_PATH.joinpath("info.png")).subsample(25)
         info = ttk.Label(frame, image=image_info)
-        info.grid(row=0, column=1, padx=(2, 0), sticky="e")
+        info.grid(row=0, column=2, padx=(2, 0), sticky="e")
         setattr(info, "_image_info", image_info)  # Prevent garbage collection
         ToolTip(
             info, 
@@ -113,6 +111,12 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
             delta = end_date - start_date
             self.result_var.set(f"Difference: {delta.days} days")
             # colocar um relatório com dias úteis e finais de semana
+            business_days = 0
+            while start_date < end_date:
+                if start_date.weekday() < 5:  # Monday to Friday are business days
+                    business_days += 1
+                start_date += timedelta(days=1)
+            self.business_days_var.set(f"Business Days: {business_days}")
         else:
             self.result_var.set("Invalid dates")
 

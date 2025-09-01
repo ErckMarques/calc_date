@@ -11,6 +11,7 @@ import pystray
 import ttkbootstrap as ttk
 from PIL import Image, ImageTk
 from ttkbootstrap import Window, PhotoImage
+from ttkbootstrap.tooltip import ToolTip
 
 from date_calc.gui.frame_date_difference import ConfigureGridLayout, FrameDateDifference
 from date_calc.gui.frame_data_interval import FrameDateWithInterval
@@ -72,7 +73,7 @@ class TWindow(Window, ConfigureGridLayout):
         Configure the window settings.
         """
         self.resizable(False, False)
-        self.bind("<Control-BackSpace>", lambda e: self.destroy())
+        
         self.bind("<Escape>", lambda e: self.focus_set())
         # Configure grid layout for widgets
         self.configure_grid_layout(self, rows=3, columns=1)
@@ -130,14 +131,17 @@ class TWindow(Window, ConfigureGridLayout):
         # self.configure_grid_layout(frame, rows=1, columns=2)
         frame.pack(pady=10, padx=10, fill="both", expand=True)
 
-        # fix this
-        image = Image.open(ICON_PATH.joinpath("config.png")).resize((60, 60), Image.Resampling.LANCZOS)
-        btn_config = ttk.Button(frame, image=ImageTk.PhotoImage(image), command=self._top_config)
-        setattr(btn_config, "image", image)  # keep a reference!
+        image = PhotoImage(name="config_icon", file=ICON_PATH.joinpath('config.png')).subsample(30)
+        btn_config = ttk.Button(frame, image=image, command=self._top_config,)
+        setattr(btn_config, "_image", image)  # keep a reference!
         btn_config.pack(side="left", padx=5)
+        ToolTip(btn_config, "Open configuration window", bootstyle="info")
 
-        btn_tray = ttk.Button(frame, text="Tray System", command=self._development)
+        image_tray = PhotoImage(name="tray_icon", file=ICON_PATH.joinpath('ocultar.png')).subsample(30)
+        btn_tray = ttk.Button(frame, image=image_tray, command=self._development)
+        setattr(btn_tray, "_image", image_tray)  # keep a reference!
         btn_tray.pack(side="left", padx=5)
+        ToolTip(btn_tray, "Minimize to tray", bootstyle="info")
 
     def _development(self):
         """open the development window"""
