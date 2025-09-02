@@ -25,9 +25,8 @@ dynamic = ["version"]
 
 [project.scripts]
 dtcalc = "date_calc.__main__:main"
-
-[project.gui-scripts]
 dtcalc-gui = "date_calc.gui.__init__:main"
+
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
