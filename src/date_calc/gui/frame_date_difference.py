@@ -5,7 +5,7 @@ from ttkbootstrap.constants import INFO
 from ttkbootstrap.tooltip import ToolTip
 from PIL import Image, ImageTk
 
-from date_calc import TkContainer, ICON_PATH
+from date_calc import TkContainer, ICON_PATH, t
 from date_calc.gui.utils.grid_layout import ConfigureGridLayout
 
 @final
@@ -29,7 +29,7 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         """
         Configure the label frame.
         """
-        self.config(text="Date Difference", padding=(10, 10))
+        self.config(text=t['date_diff_labelf'], padding=(10, 10))
         
 
     def _create_widgets(self) -> None:
@@ -49,11 +49,11 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         self.start_date = ttk.DateEntry(frame, popup_title="Select Start Date", startdate=date.today().replace(day=1))
         # self.start_date.entry.bind("<KeyPress>", self._on_key_press)
         self.start_date.grid(row=0, column=0, padx=(2, 5), sticky="ew")
-        ToolTip(self.start_date, "Select the start date", bootstyle="info")
+        ToolTip(self.start_date, t['date_start_tooltip'], bootstyle="info")
 
         self.end_date = ttk.DateEntry(frame, popup_title="Select End Date", startdate=date.today().replace(day=1))
         self.end_date.grid(row=0, column=1, padx=(0, 2), sticky="ew")
-        ToolTip(self.end_date, "Select the end date", bootstyle="info")
+        ToolTip(self.end_date, t['date_end_tooltip'], bootstyle="info")
 
     def _create_label_response(self) -> None:
         """Create a label to display the date difference response."""

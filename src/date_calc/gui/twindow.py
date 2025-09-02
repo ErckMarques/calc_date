@@ -15,13 +15,11 @@ from PIL import Image, ImageTk
 from ttkbootstrap import Window, PhotoImage
 from ttkbootstrap.tooltip import ToolTip
 
-from date_calc.gui import find_image, ICON_PATH
 from date_calc.gui.frame_date_difference import FrameDateDifference
 from date_calc.gui.frame_data_interval import FrameDateWithInterval
 from date_calc.gui.utils.grid_layout import ConfigureGridLayout
 
-from date_calc import ICON_PATH
-
+from date_calc import ICON_PATH, t
 
 @final
 class TWindow(Window, ConfigureGridLayout):
@@ -74,16 +72,16 @@ class TWindow(Window, ConfigureGridLayout):
         """
         Configures window and class-level bindings (bind_class)
         """
-        self.title("Day Counter and Date Calculator")
-        self.resizable(False, False)
+        self.title(t["main_app_title"])
+        # self.resizable(False, False)
         self.bind("<Escape>", lambda e: self.focus_set())
         # Configure grid layout for widgets
         self.configure_grid_layout(self, rows=3, columns=1)
         if sys.platform == "win32":
-            self.iconbitmap(find_image("date_calc"))
+            self.iconbitmap(ICON_PATH.joinpath("date_calc.ico"))
         else:
             # Linux and macOS
-            self.iconphoto(True, find_image("date_calc"))
+            self.iconphoto(True, ICON_PATH.joinpath("date_calc.png"))
 
     def _minimize_to_tray(self) -> None:
         """
@@ -105,7 +103,7 @@ class TWindow(Window, ConfigureGridLayout):
         """
         try:
             # Load icon image
-            image = Image.open(find_image("date_calc"))
+            image = Image.open(ICON_PATH.joinpath("date_calc.ico"))
         except FileNotFoundError:
             # Fallback: create a simple image if file not found
             image = Image.new('RGB', (64, 64), color='blue')
@@ -120,7 +118,7 @@ class TWindow(Window, ConfigureGridLayout):
         self._tray_icon = pystray.Icon(
             "date_calculator", 
             image, 
-            "Date Calculator", 
+            t["tray_icon_tooltip"], 
             menu
         )
         self._tray_icon.run_detached()
@@ -151,53 +149,56 @@ class TWindow(Window, ConfigureGridLayout):
         Add widgets to the main window.
         """
         FrameDateDifference(self).pack(pady=10, padx=10, fill="both", expand=True)
-        self._add_frame_buttons()
         FrameDateWithInterval(self).pack(pady=10, padx=10, fill="both", expand=True)
+        self._add_frame_buttons()
 
     def _add_frame_buttons(self) -> None:
         frame = ttk.Frame(self)
-<<<<<<< HEAD
-        frame.pack(pady=10, padx=10, fill="both", expand=True, side='bottom') # The bottom frame for buttons always placed at the end of the screen
-        
-        # Configuration button
-        image = PhotoImage(name="config_icon", file=ICON_PATH.parent.joinpath("png", "config.png"))
-        ttk.Button(frame, text="Configuration", image=image, compound="center", command=self._top_config).pack(side="left", padx=5)
-        
-        # Tray System button - now functional
-        ttk.Button(
-            frame, 
-            text="Tray System", 
-            command=self._minimize_to_tray  # Changed to use the tray function
-        ).pack(side="left", padx=5)
-=======
-        # self.configure_grid_layout(frame, rows=1, columns=2)
-        frame.pack(pady=10, padx=10, fill="both", expand=True)
+        self.configure_grid_layout(frame, rows=1, columns=2)
+        frame.pack(pady=10, padx=10, anchor="sw", expand=True, side="left")
 
         image = PhotoImage(name="config_icon", file=ICON_PATH.joinpath('config.png')).subsample(30)
         btn_config = ttk.Button(frame, image=image, command=self._top_config,)
         setattr(btn_config, "_image", image)  # keep a reference!
         btn_config.pack(side="left", padx=5)
-        ToolTip(btn_config, "Open configuration window", bootstyle="info")
+        ToolTip(btn_config, t['btn_config_tooltip'], bootstyle="info")
 
         image_tray = PhotoImage(name="tray_icon", file=ICON_PATH.joinpath('ocultar.png')).subsample(30)
-        btn_tray = ttk.Button(frame, image=image_tray, command=self._development)
+        btn_tray = ttk.Button(frame, image=image_tray, command=self._minimize_to_tray)
         setattr(btn_tray, "_image", image_tray)  # keep a reference!
         btn_tray.pack(side="left", padx=5)
-        ToolTip(btn_tray, "Minimize to tray", bootstyle="info")
->>>>>>> 9289e2274c6119a2422f8b0b27e257d3f6c1afb7
+        ToolTip(btn_tray, t['btn_tray_tooltip'], bootstyle="info")
+
+        # switcher theme
+        on_img = PhotoImage(name="on_icon", file=ICON_PATH.joinpath('light.png')).subsample(30)
+        swtch_btn = ttk.Button(frame, image=on_img, command=lambda :self._switch_theme(swtch_btn))
+        swtch_btn.pack(side='left', padx=5)
+        setattr(swtch_btn, "_image", on_img)
+        ToolTip(swtch_btn, t['btn_switch_tooltip'], bootstyle="info")
+
+    def _switch_theme(self, button: ttk.Button):
+        """Switch the application theme."""
+        if self.style.theme_use() == "darkly":
+            self.style.theme_use("litera")
+            off_img = PhotoImage(name="off_icon", file=ICON_PATH.joinpath('dark.png')).subsample(30)
+            setattr(button, "_image", off_img)
+        else:
+            self.style.theme_use("darkly")
+            on_img = PhotoImage(name="on_icon", file=ICON_PATH.joinpath('light.png')).subsample(30)
+            setattr(button, "_image", on_img)
 
     def _development(self):
         """open the development window"""
         top = ttk.Toplevel(title="Development")
         # Add development widgets here
-        top.iconbitmap(find_image("develop"))
+        top.iconbitmap(ICON_PATH.joinpath("develop.png"))
         ttk.Label(top, text="Development Window in development").pack(pady=20)
 
     def _top_config(self):
         """open the top configuration window"""
         top = ttk.Toplevel(title="Configuration")
         # Add configuration widgets here
-        top.iconbitmap(find_image("config"))
+        top.iconbitmap(ICON_PATH.joinpath("config.png"))
         top.title("Configuration")
         top.geometry("400x300")
         ttk.Label(top, text="Configuration Window in development").pack(pady=20)
@@ -220,7 +221,7 @@ class TWindow(Window, ConfigureGridLayout):
 if __name__ == "__main__":
     # Example usage of TWindow
     try:       
-        app = TWindow(themename="darkly")
+        app = TWindow()
         app.mainloop()
     except KeyboardInterrupt as e:
         print("Encerrando a aplicação")
