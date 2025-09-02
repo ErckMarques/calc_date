@@ -1,5 +1,5 @@
 """
-Provides an ttkbootstrap.dialog.DatePickerDialog customized. 
+Provides an custom ttkbootstrap.dialog.DatePickerDialog. 
 """
 
 from ttkbootstrap.dialogs import DatePickerDialog
