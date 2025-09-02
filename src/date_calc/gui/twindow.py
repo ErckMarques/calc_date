@@ -11,12 +11,17 @@ import pystray
 import ttkbootstrap as ttk
 from PIL import Image
 from tkinter import Event
+from PIL import Image, ImageTk
 from ttkbootstrap import Window, PhotoImage
+from ttkbootstrap.tooltip import ToolTip
 
 from date_calc.gui import find_image, ICON_PATH
 from date_calc.gui.frame_date_difference import FrameDateDifference
 from date_calc.gui.frame_data_interval import FrameDateWithInterval
 from date_calc.gui.utils.grid_layout import ConfigureGridLayout
+
+from date_calc import ICON_PATH
+
 
 @final
 class TWindow(Window, ConfigureGridLayout):
@@ -151,6 +156,7 @@ class TWindow(Window, ConfigureGridLayout):
 
     def _add_frame_buttons(self) -> None:
         frame = ttk.Frame(self)
+<<<<<<< HEAD
         frame.pack(pady=10, padx=10, fill="both", expand=True, side='bottom') # The bottom frame for buttons always placed at the end of the screen
         
         # Configuration button
@@ -163,6 +169,22 @@ class TWindow(Window, ConfigureGridLayout):
             text="Tray System", 
             command=self._minimize_to_tray  # Changed to use the tray function
         ).pack(side="left", padx=5)
+=======
+        # self.configure_grid_layout(frame, rows=1, columns=2)
+        frame.pack(pady=10, padx=10, fill="both", expand=True)
+
+        image = PhotoImage(name="config_icon", file=ICON_PATH.joinpath('config.png')).subsample(30)
+        btn_config = ttk.Button(frame, image=image, command=self._top_config,)
+        setattr(btn_config, "_image", image)  # keep a reference!
+        btn_config.pack(side="left", padx=5)
+        ToolTip(btn_config, "Open configuration window", bootstyle="info")
+
+        image_tray = PhotoImage(name="tray_icon", file=ICON_PATH.joinpath('ocultar.png')).subsample(30)
+        btn_tray = ttk.Button(frame, image=image_tray, command=self._development)
+        setattr(btn_tray, "_image", image_tray)  # keep a reference!
+        btn_tray.pack(side="left", padx=5)
+        ToolTip(btn_tray, "Minimize to tray", bootstyle="info")
+>>>>>>> 9289e2274c6119a2422f8b0b27e257d3f6c1afb7
 
     def _development(self):
         """open the development window"""

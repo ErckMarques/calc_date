@@ -1,4 +1,4 @@
-from date_calc.gui import TkContainer
+from date_calc import TkContainer
 
 class ConfigureGridLayout:
     @staticmethod

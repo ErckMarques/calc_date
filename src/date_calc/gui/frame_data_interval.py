@@ -1,21 +1,20 @@
 from __future__ import annotations
 from datetime import date, timedelta
 from tkinter import Misc, Event
-from typing import Callable, Literal, final, TypeAlias
+from typing import final
 
 from PIL import Image, ImageDraw, ImageTk
 import ttkbootstrap as ttk
 from ttkbootstrap.tooltip import ToolTip
 from ttkbootstrap.constants import INFO, DANGER, PRIMARY
 
-from date_calc.gui.utils.grid_layout import ConfigureGridLayout
-from date_calc.gui import ICON_PATH
-from date_calc.gui import TkContainer
+from date_calc import TkContainer, ICON_PATH
+from date_calc.gui.frame_date_difference import ConfigureGridLayout
 
 @final
 class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
     def __init__(self, 
-        master: TkContainer | None = None, 
+        master: TkContainer, 
         **kwargs
     ) -> None:
         super().__init__(
@@ -72,10 +71,10 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
             variable=self.interval_type, value="business"
         ).grid(row=0, column=1, padx=(2, 0), sticky="w")
 
-        image_info = ImageTk.PhotoImage(Image.open(ICON_PATH.parent.joinpath("png", "info.png")).resize((30, 30)))
-        info = ttk.Label(frame, image=image_info,)
-        setattr(info, 'image', image_info)  # Prevent garbage collection
-        info.grid(row=0, column=2, padx=(0, 5), sticky="e")
+        image_info = ttk.PhotoImage(name="info_icon", file=ICON_PATH.joinpath("info.png")).subsample(25)
+        info = ttk.Label(frame, image=image_info)
+        info.grid(row=0, column=2, padx=(2, 0), sticky="e")
+        setattr(info, "_image_info", image_info)  # Prevent garbage collection
         ToolTip(
             info, 
             text="Allows you to calculate a date from a number of calendar days or business days", 
