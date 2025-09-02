@@ -10,13 +10,13 @@ import sys
 import pystray
 import ttkbootstrap as ttk
 from PIL import Image
+from tkinter import Event
 from ttkbootstrap import Window, PhotoImage
 
-from date_calc.gui.frame_date_difference import ConfigureGridLayout, FrameDateDifference
+from date_calc.gui import find_image, ICON_PATH
+from date_calc.gui.frame_date_difference import FrameDateDifference
 from date_calc.gui.frame_data_interval import FrameDateWithInterval
-
-ICON_PATH: Path = Path(__file__).parents[2].joinpath("assets")
-
+from date_calc.gui.utils.grid_layout import ConfigureGridLayout
 
 @final
 class TWindow(Window, ConfigureGridLayout):
@@ -62,59 +62,83 @@ class TWindow(Window, ConfigureGridLayout):
 
         # configuration
         self._configuration_of_window()
-        # Add behavior to the system tray icon.
-        # self._configure_py_stray()
         # Add widgets
         self._add_widgets()
 
     def _configuration_of_window(self) -> None:
         """
-        Configure the window settings.
+        Configures window and class-level bindings (bind_class)
         """
+        self.title("Day Counter and Date Calculator")
         self.resizable(False, False)
-        self.bind("<Control-BackSpace>", lambda e: self.destroy())
         self.bind("<Escape>", lambda e: self.focus_set())
         # Configure grid layout for widgets
         self.configure_grid_layout(self, rows=3, columns=1)
         if sys.platform == "win32":
-            self.iconbitmap(ICON_PATH.joinpath("date_calc.ico"))
+            self.iconbitmap(find_image("date_calc"))
         else:
             # Linux and macOS
-            self.iconphoto(True, PhotoImage(file=ICON_PATH.joinpath("date_calc.png")))
+            self.iconphoto(True, find_image("date_calc"))
 
+    def _minimize_to_tray(self) -> None:
+        """
+        Minimize the window to system tray.
+        """
+        self.withdraw()  # Hide the window
+        
+        # Create tray icon if it doesn't exist
+        if not hasattr(self, '_tray_icon') or self._tray_icon is None:
+            self._create_tray_icon()
+        else:
+            # If icon exists but was stopped, recreate it
+            self._tray_icon.stop()
+            self._create_tray_icon()
 
-    def _configure_py_stray(self) -> None:
+    def _create_tray_icon(self) -> None:
         """
-        Add behavior to the system tray icon.
+        Create the system tray icon.
         """
-        self.protocol("WM_DELETE_WINDOW", self._on_close)
-
-    def _on_close(self) -> None:
-        """
-        Handle the window close event.
-        """
-        self.withdraw()
-        image = Image.open(ICON_PATH)
-        menu = (
-            pystray.MenuItem("Show", self._on_show),
-            pystray.MenuItem("Exit", self._on_exit)
+        try:
+            # Load icon image
+            image = Image.open(find_image("date_calc"))
+        except FileNotFoundError:
+            # Fallback: create a simple image if file not found
+            image = Image.new('RGB', (64, 64), color='blue')
+        
+        # Create tray menu
+        menu = pystray.Menu(
+            pystray.MenuItem("Show", self._restore_from_tray),
+            pystray.MenuItem("Exit", self._quit_application)
         )
-        self.icon = pystray.Icon("Date Calculator", image, "Date Calculator", menu)
-        self.icon.run()
-        self.ico = image
+        
+        # Create and run tray icon (non-blocking)
+        self._tray_icon = pystray.Icon(
+            "date_calculator", 
+            image, 
+            "Date Calculator", 
+            menu
+        )
+        self._tray_icon.run_detached()
 
-    def _on_show(self) -> None:
+    def _restore_from_tray(self) -> None:
         """
-        Show the main window when the system tray icon is clicked.
+        Restore the window from system tray.
         """
-        self.icon.stop()
-        self.after(0, self.deiconify)
-    
-    def _on_exit(self) -> None:
+        if hasattr(self, '_tray_icon') and self._tray_icon:
+            self._tray_icon.stop()
+            self._tray_icon = None
+        
+        # Restore the window
+        self.deiconify()
+        self.lift()
+        self.focus_force()
+
+    def _quit_application(self) -> None:
         """
-        Exit the application when the system tray icon is clicked.
+        Quit the application completely.
         """
-        self.icon.stop()
+        if hasattr(self, '_tray_icon') and self._tray_icon:
+            self._tray_icon.stop()
         self.destroy()
 
     def _add_widgets(self) -> None:
@@ -122,29 +146,36 @@ class TWindow(Window, ConfigureGridLayout):
         Add widgets to the main window.
         """
         FrameDateDifference(self).pack(pady=10, padx=10, fill="both", expand=True)
-        FrameDateWithInterval(self).pack(pady=10, padx=10, fill="both", expand=True)
         self._add_frame_buttons()
+        FrameDateWithInterval(self).pack(pady=10, padx=10, fill="both", expand=True)
 
     def _add_frame_buttons(self) -> None:
         frame = ttk.Frame(self)
-        # self.configure_grid_layout(frame, rows=1, columns=2)
-        frame.pack(pady=10, padx=10, fill="both", expand=True)
-        image = PhotoImage(name="config_icon", file=ICON_PATH.joinpath("config.png"))
-        ttk.Button(frame, text="Configuration", image=image, command=self._top_config).pack(side="left", padx=5)
-        ttk.Button(frame, text="Tray System", command=self._development).pack(side="left", padx=5)
+        frame.pack(pady=10, padx=10, fill="both", expand=True, side='bottom') # The bottom frame for buttons always placed at the end of the screen
+        
+        # Configuration button
+        image = PhotoImage(name="config_icon", file=ICON_PATH.parent.joinpath("png", "config.png"))
+        ttk.Button(frame, text="Configuration", image=image, compound="center", command=self._top_config).pack(side="left", padx=5)
+        
+        # Tray System button - now functional
+        ttk.Button(
+            frame, 
+            text="Tray System", 
+            command=self._minimize_to_tray  # Changed to use the tray function
+        ).pack(side="left", padx=5)
 
     def _development(self):
         """open the development window"""
         top = ttk.Toplevel(title="Development")
         # Add development widgets here
-        top.iconbitmap(ICON_PATH.joinpath("develop.ico"))
+        top.iconbitmap(find_image("develop"))
         ttk.Label(top, text="Development Window in development").pack(pady=20)
 
     def _top_config(self):
         """open the top configuration window"""
         top = ttk.Toplevel(title="Configuration")
         # Add configuration widgets here
-        top.iconbitmap(ICON_PATH.joinpath("config.ico"))
+        top.iconbitmap(find_image("config"))
         top.title("Configuration")
         top.geometry("400x300")
         ttk.Label(top, text="Configuration Window in development").pack(pady=20)
@@ -167,7 +198,7 @@ class TWindow(Window, ConfigureGridLayout):
 if __name__ == "__main__":
     # Example usage of TWindow
     try:       
-        app = TWindow(title="Date Calculator", themename="darkly")
+        app = TWindow(themename="darkly")
         app.mainloop()
     except KeyboardInterrupt as e:
         print("Encerrando a aplicação")
