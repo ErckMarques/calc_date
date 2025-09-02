@@ -4,16 +4,23 @@ Uma calculadora de datas intuitiva e eficiente, desenvolvida em Python. Permite 
 
 ## ✨ Funcionalidades
 
-* **Cálculo de Diferença:** Calcule facilmente o número de dias, duas datas.
+* **Cálculo de Diferença:** Calcule facilmente o número de dias, entre duas datas.
 * **Adição/Subtração:** Adicione ou subtraia um número específico de dias, semanas, meses ou anos a partir de uma data de origem.
 * **Interface Dupla:** Use o programa pela Interface Gráfica (GUI) amigável ou pela Interface de Linha de Comando (CLI) para automação.
 * **Design Moderno:** GUI construída com TkInter e TtkBootstrap para uma experiência visual agradável e moderna.
 
 ## 🖼️ Screenshots
 
-|            Versão 1.1.0 (Baseada em Funções)            |         Versão 2.1.0 (Baseada em Classes - Atual)         |
-| :---------------------------------------------------------: | :---------------------------------------------------------: |
+| Versão 1.1.0 (Baseada em Funções) | Versão 2.1.0 (Baseada em Classes - Atual) |
+| :-------------------------------- | :--------------------------------------- |
 | [![Versão 1.1.0](src/assets/v1.1.0.png)](src/assets/v1.1.0.png) | [![Versão 2.1.0](src/assets/v2.1.0.png)](src/assets/v2.1.0.png) |
+
+<br>
+<br>
+
+| Versão 3.0.0 (Baseada em Classes - Atual, com mais recursos) |
+| :---------------------------------------------------------- |
+| [![Versão 3.0.0](src/assets/v3.0.0.png)](src/assets/v3.0.0.png) |
 
 ## 🚀 Instalação e Uso
 
@@ -39,7 +46,7 @@ pipx install ./date_calc-*.whl
 
 ## Como Usar
 
-Após a instalação, o comando date-calc estará disponível globalmente no seu terminal.
+Após a instalação, o comando `date-calc` estará disponível globalmente no seu terminal.
 
 Para abrir a Interface Gráfica:
 
