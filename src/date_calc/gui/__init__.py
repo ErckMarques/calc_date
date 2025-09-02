@@ -1,3 +1,20 @@
+import sys
+import ttkbootstrap as ttk
+from pathlib import Path
+
+if sys.platform.startswith("win"):
+    ICON_PATH: Path = Path(__file__).parents[2].joinpath("assets", "icon")
+else:
+    ICON_PATH: Path = Path(__file__).parents[2].joinpath("assets", "png")
+
+# fix this
+def find_image(name: str) -> Path | str:
+    """Find an image file in the icon path."""
+    if sys.platform.startswith("win"):
+        return ICON_PATH.joinpath(f"{name}.ico")
+    return ICON_PATH.joinpath(f"{name}.png")
+
+type TkContainer = ttk.Window | ttk.Frame | ttk.Labelframe
 
 def main():
     from date_calc.gui.twindow import TWindow
@@ -8,8 +25,6 @@ def main():
     config_locale_app()
     
     window = TWindow(title="Date Calculator", themename="darkly")
-    FrameDateDifference(window).pack(pady=10, padx=10, fill="both", expand=True)
-    FrameDateWithInterval(window).pack(pady=10, padx=10, fill="both", expand=True)
     window.mainloop()
 
 if __name__ == "__main__":

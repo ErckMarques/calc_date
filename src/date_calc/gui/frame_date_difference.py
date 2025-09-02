@@ -3,20 +3,11 @@ from typing import final
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import INFO
 from ttkbootstrap.tooltip import ToolTip
-from tkinter import Event
+from PIL import Image, ImageTk
 
-type TkContainer = ttk.Window | ttk.Frame | ttk.Labelframe
-
-class ConfigureGridLayout:
-    @staticmethod
-    def configure_grid_layout(container: TkContainer, *, rows: int, columns: int) -> None:
-        """
-        Configure the grid layout for the given container.
-        """
-        for col in range(columns):
-            container.grid_columnconfigure(col, weight=1)
-        for row in range(rows):
-            container.grid_rowconfigure(row, weight=1)
+from date_calc.gui import find_image
+from date_calc.gui.utils.grid_layout import ConfigureGridLayout
+from date_calc.gui import TkContainer
 
 @final
 class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
@@ -40,11 +31,7 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         Configure the label frame.
         """
         self.config(text="Date Difference", padding=(10, 10))
-        ToolTip(
-            self, 
-            text="Allows you to calculate the difference between two dates", 
-            bootstyle=INFO
-        )
+        
 
     def _create_widgets(self) -> None:
         """
@@ -61,7 +48,6 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         frame.pack(padx=10, pady=10, fill="both", expand=True)
 
         self.start_date = ttk.DateEntry(frame, popup_title="Select Start Date")
-        self.start_date.entry.bind("<KeyPress>", self._on_key_press)
         self.start_date.grid(row=0, column=0, padx=(2, 5), sticky="ew")
         ToolTip(self.start_date, "Select the start date", bootstyle="info")
 
@@ -79,6 +65,16 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
 
         self.result_var = ttk.StringVar(name="date_difference_response", value="0 days")
         ttk.Label(frame, textvariable=self.result_var).pack(side="left", padx=(5, 0))
+        
+        image_info = ImageTk.PhotoImage(Image.open(find_image("info")).resize((30, 30)))
+        info = ttk.Label(frame, image=image_info, justify="center")
+        ToolTip(
+            info, 
+            text="Allows you to calculate the difference between two dates", 
+            bootstyle=INFO
+        )
+        setattr(info, "image", image_info)
+        info.pack(side="right", padx=(0, 5))
 
     def _create_buttons(self) -> None:
         """Create buttons for calculating and resetting the date difference."""
@@ -96,14 +92,6 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         reset_button = ttk.Button(frame_buttons, text="Reset", command=self._reset_date_entries)
         reset_button.grid(row=0, column=1, padx=(5, 0), sticky="ew")
         ToolTip(reset_button, "Clear the date entries", bootstyle="info")
-
-
-    def _on_key_press(self, event: Event) -> None:
-        """
-        Handle key press events in the date entry widget.
-        """
-        if event.char and not event.char.isdigit() and event.char not in ('\b', '\x7f', r'/'):
-            event.widget.bell()
 
     def _calculate_date_difference(self) -> None:
         start_date = self.start_date.get_date()

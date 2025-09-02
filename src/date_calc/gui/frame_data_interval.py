@@ -3,18 +3,19 @@ from datetime import date, timedelta
 from tkinter import Misc, Event
 from typing import Callable, Literal, final, TypeAlias
 
+from PIL import Image, ImageDraw, ImageTk
 import ttkbootstrap as ttk
 from ttkbootstrap.tooltip import ToolTip
 from ttkbootstrap.constants import INFO, DANGER, PRIMARY
 
-from date_calc.gui.frame_date_difference import ConfigureGridLayout
-
-TKContainer: TypeAlias = ttk.Window | ttk.Frame | ttk.Labelframe
+from date_calc.gui.utils.grid_layout import ConfigureGridLayout
+from date_calc.gui import ICON_PATH
+from date_calc.gui import TkContainer
 
 @final
 class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
     def __init__(self, 
-        master: Misc | None = None, 
+        master: TkContainer | None = None, 
         **kwargs
     ) -> None:
         super().__init__(
@@ -26,12 +27,6 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
 
     def _configure_label_frame(self) -> None:
         self.configure(text="Date with Interval", padding=(10, 5))
-        ToolTip(
-            self, 
-            text="Allows you to calculate a date from a number of calendar days or business days", 
-            bootstyle=INFO
-        )
-
 
     def _create_widgets(self) -> None:
         """Create and arrange widgets in the frame."""
@@ -64,7 +59,7 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
 
     def _create_frame_radio(self) -> None:
         frame = ttk.Frame(self)
-        self.configure_grid_layout(frame, rows=1, columns=2)
+        self.configure_grid_layout(frame, rows=1, columns=3)
         frame.pack(padx=10, pady=10, fill="both", expand=True)
 
         self.interval_type = ttk.StringVar(value="days")
@@ -76,6 +71,16 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
             frame, text="Business Days",
             variable=self.interval_type, value="business"
         ).grid(row=0, column=1, padx=(2, 0), sticky="w")
+
+        image_info = ImageTk.PhotoImage(Image.open(ICON_PATH.parent.joinpath("png", "info.png")).resize((30, 30)))
+        info = ttk.Label(frame, image=image_info,)
+        setattr(info, 'image', image_info)  # Prevent garbage collection
+        info.grid(row=0, column=2, padx=(0, 5), sticky="e")
+        ToolTip(
+            info, 
+            text="Allows you to calculate a date from a number of calendar days or business days", 
+            bootstyle=INFO
+        )
 
     def _create_label_response(self) -> None:
         frame = ttk.Frame(self)
