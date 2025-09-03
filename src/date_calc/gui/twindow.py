@@ -13,6 +13,7 @@ from PIL import Image
 from tkinter import Event
 from PIL import Image, ImageTk
 from ttkbootstrap import Window, PhotoImage
+from ttkbootstrap.dialogs import Messagebox
 from ttkbootstrap.tooltip import ToolTip
 
 from date_calc.gui.frame_date_difference import FrameDateDifference
@@ -20,6 +21,7 @@ from date_calc.gui.frame_data_interval import FrameDateWithInterval
 from date_calc.gui.utils.grid_layout import ConfigureGridLayout
 
 from date_calc import ICON_PATH, t
+
 
 @final
 class TWindow(Window, ConfigureGridLayout):
@@ -31,37 +33,9 @@ class TWindow(Window, ConfigureGridLayout):
 
     def __init__(
             self,
-            title="ttkbootstrap",
-            themename="litera",
-            iconphoto='',
-            size=None,
-            position=None,
-            minsize=None,
-            maxsize=None,
-            resizable=None,
-            hdpi=True,
-            scaling=None,
-            transient=None,
-            overrideredirect=False,
-            alpha=1.0,
             **kwargs,
         ) -> None:
-        super().__init__(
-            title=title,
-            themename=themename,
-            iconphoto=iconphoto,
-            size=size,
-            position=position,
-            minsize=minsize,
-            maxsize=maxsize,
-            resizable=resizable,
-            hdpi=hdpi,
-            scaling=scaling,
-            transient=transient,
-            overrideredirect=overrideredirect,
-            alpha=alpha,
-            **kwargs,
-        )
+        super().__init__(**kwargs)
 
         # configuration
         self._configuration_of_window()
@@ -78,7 +52,7 @@ class TWindow(Window, ConfigureGridLayout):
         # Configure grid layout for widgets
         self.configure_grid_layout(self, rows=3, columns=1)
         if sys.platform == "win32":
-            self.iconbitmap(ICON_PATH.joinpath("date_calc.ico"))
+            self.iconbitmap(ICON_PATH.joinpath("date_calc.ico"), default=ICON_PATH.joinpath("date_calc.ico").as_posix())
         else:
             # Linux and macOS
             self.iconphoto(True, ICON_PATH.joinpath("date_calc.png"))
@@ -159,7 +133,7 @@ class TWindow(Window, ConfigureGridLayout):
         frame.pack(pady=10, padx=10, anchor="sw", expand=True, side="left")
 
         image = PhotoImage(name="config_icon", file=ICON_PATH.joinpath('config.png')).subsample(30)
-        btn_config = ttk.Button(frame, image=image, command=self._top_config,)
+        btn_config = ttk.Button(frame, image=image, command=self._development,)
         setattr(btn_config, "_image", image)  # keep a reference!
         btn_config.pack(side="left", padx=5)
         ToolTip(btn_config, t['main']['btn_config_tooltip'], bootstyle="info")
@@ -190,10 +164,15 @@ class TWindow(Window, ConfigureGridLayout):
 
     def _development(self):
         """open the development window"""
-        top = ttk.Toplevel(title="Development")
-        # Add development widgets here
-        top.iconbitmap(ICON_PATH.joinpath("develop.png"))
-        ttk.Label(top, text="Development Window in development").pack(pady=20)
+        Messagebox.show_info(
+            message=dedent(
+            """
+            Em desenvolvimento
+            """
+            ),
+            title="resource under development".title(),
+            parent=self,
+        )
 
     def _top_config(self):
         """open the top configuration window"""
