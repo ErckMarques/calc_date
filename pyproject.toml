@@ -30,6 +30,7 @@ dtcalc-gui = "date_calc.gui.__init__:main"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
+polib = "^1.2.0"
 
 [tool.poetry]
 package-mode = true
