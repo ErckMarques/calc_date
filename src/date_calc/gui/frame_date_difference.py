@@ -3,7 +3,6 @@ from typing import final
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import INFO
 from ttkbootstrap.tooltip import ToolTip
-from PIL import Image, ImageTk
 
 from date_calc import TkContainer, ICON_PATH, t
 from date_calc.gui.utils.grid_layout import ConfigureGridLayout
@@ -29,7 +28,7 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         """
         Configure the label frame.
         """
-        self.config(text=t['date_diff_labelf'], padding=(10, 10))
+        self.config(text=t['date_diff']['labelf'], padding=(10, 10))
         
 
     def _create_widgets(self) -> None:
@@ -49,11 +48,11 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         self.start_date = ttk.DateEntry(frame, popup_title="Select Start Date", startdate=date.today().replace(day=1))
         # self.start_date.entry.bind("<KeyPress>", self._on_key_press)
         self.start_date.grid(row=0, column=0, padx=(2, 5), sticky="ew")
-        ToolTip(self.start_date, t['date_start_tooltip'], bootstyle="info")
+        ToolTip(self.start_date, t['common']['date_start_tooltip'], bootstyle="info")
 
         self.end_date = ttk.DateEntry(frame, popup_title="Select End Date", startdate=date.today().replace(day=1))
         self.end_date.grid(row=0, column=1, padx=(0, 2), sticky="ew")
-        ToolTip(self.end_date, t['date_end_tooltip'], bootstyle="info")
+        ToolTip(self.end_date, t['date_diff']['date_end_tooltip'], bootstyle="info")
 
     def _create_label_response(self) -> None:
         """Create a label to display the date difference response."""
@@ -64,10 +63,10 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
 
         # ttk.Label(frame, text="Difference:").grid(row=0, column=0, padx=(5, 0), sticky="w")
 
-        self.result_var = ttk.StringVar(name="date_difference_response", value="Difference:  0 days")
+        self.result_var = ttk.StringVar(name="date_difference_response", value=f"{t["date_diff"]["difference_response"]}  0 {t["common"]["days"]}")
         ttk.Label(frame, textvariable=self.result_var).grid(row=0, column=0, padx=(5, 0), sticky="w")
 
-        self.business_days_var = ttk.StringVar(name="business_days_response", value="Business Days:  0")
+        self.business_days_var = ttk.StringVar(name="business_days_response", value=f"{t["date_diff"]["business_response"]}  0 {t["common"]["days"]}")
         ttk.Label(frame, textvariable=self.business_days_var).grid(row=0, column=1, padx=(5, 0), sticky="w")
 
         image_info = ttk.PhotoImage(name="info_icon", file=ICON_PATH.joinpath("info.png")).subsample(25)
@@ -76,7 +75,7 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         setattr(info, "_image_info", image_info)  # Prevent garbage collection
         ToolTip(
             info, 
-            text="Allows you to calculate a date from a number of calendar days or business days", 
+            text=t['date_diff']['label_info'], 
             bootstyle=INFO
         )
 
@@ -87,33 +86,33 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         frame_buttons.pack(padx=10, pady=10, fill="both", expand=True)
 
         calculate_button = ttk.Button(
-            frame_buttons, text="Calculate",
+            frame_buttons, text=t['common']['btn_calculate'],
             command=self._calculate_date_difference
         )
         calculate_button.grid(row=0, column=0, padx=(5, 0), sticky="ew")
-        ToolTip(calculate_button, "Calculate the difference between the selected dates", bootstyle="info")
+        ToolTip(calculate_button, t['date_diff']['btn_calc_tooltip'], bootstyle="info")
 
-        reset_button = ttk.Button(frame_buttons, text="Reset", command=self._reset_date_entries)
+        reset_button = ttk.Button(frame_buttons, text=t['common']['btn_clear'], command=self._reset_date_entries)
         reset_button.grid(row=0, column=1, padx=(5, 0), sticky="ew")
-        ToolTip(reset_button, "Clear the date entries", bootstyle="info")
+        ToolTip(reset_button, t['date_diff']['btn_clean_tooltip'], bootstyle="info")
 
     def _calculate_date_difference(self) -> None:
         start_date = self.start_date.get_date()
         end_date = self.end_date.get_date()
         if start_date and end_date:
             delta = end_date - start_date
-            self.result_var.set(f"Difference: {delta.days} days")
+            self.result_var.set(f"{t["date_diff"]["difference_response"]}  {delta.days} {t['common']['days']}")
             # colocar um relatório com dias úteis e finais de semana
             business_days = 0
             while start_date < end_date:
                 if start_date.weekday() < 5:  # Monday to Friday are business days
                     business_days += 1
                 start_date += timedelta(days=1)
-            self.business_days_var.set(f"Business Days: {business_days}")
+            self.business_days_var.set(f"{t["date_diff"]["business_response"]}  {delta.days} {t['common']['days']}")
         else:
             self.result_var.set("Invalid dates")
 
     def _reset_date_entries(self) -> None:
         self.start_date.set_date(date.today().replace(day=1))
         self.end_date.set_date(date.today().replace(day=1))
-        self.result_var.set("0 days")
+        self.result_var.set(f"{t["date_diff"]["difference_response"]}  0 {t["common"]["days"]}")

@@ -8,7 +8,7 @@ import ttkbootstrap as ttk
 from ttkbootstrap.tooltip import ToolTip
 from ttkbootstrap.constants import INFO, DANGER, PRIMARY
 
-from date_calc import TkContainer, ICON_PATH
+from date_calc import TkContainer, ICON_PATH, t
 from date_calc.gui.frame_date_difference import ConfigureGridLayout
 
 @final
@@ -25,7 +25,7 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
         self._create_widgets()
 
     def _configure_label_frame(self) -> None:
-        self.configure(text="Date with Interval", padding=(10, 5))
+        self.configure(text=t['date_interval']['labelf'], padding=(10, 5))
 
     def _create_widgets(self) -> None:
         """Create and arrange widgets in the frame."""
@@ -38,9 +38,13 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
         self.configure_grid_layout(frame, rows=1, columns=3)
         frame.pack(padx=10, pady=10, fill="both", expand=True)
 
-        self.start_date = ttk.DateEntry(frame, popup_title="Select Start Date")
+        self.start_date = ttk.DateEntry(
+            frame,
+            popup_title="Select Start Date",
+            startdate=date.today().replace(day=1)
+        )
         self.start_date.grid(row=0, column=0, padx=(2, 5), sticky="ew")
-        ToolTip(self.start_date, text="Select the start date", bootstyle=INFO)
+        ToolTip(self.start_date, text=t['common']['date_start_tooltip'], bootstyle=INFO)
 
         self.days = ttk.IntVar(name="input_days")
         entry = ttk.Entry(frame, textvariable=self.days)
@@ -50,26 +54,32 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
         entry.bind("<Control-a>", lambda e: entry.selection_range(0, ttk.END))
         entry.bind("<Escape>", lambda e: self.winfo_toplevel().focus_set())
         entry.grid(row=0, column=1, padx=(0, 5), sticky="ew")
-        ToolTip(entry, text="Enter the number of days", bootstyle=INFO)
+        ToolTip(entry, text=t['date_interval']['entry_tooltip'], bootstyle=INFO)
 
-        btn = ttk.Button(frame, text="Calculate", command=self._calculate)
+        btn = ttk.Button(frame, text=t['common']['btn_calculate'], command=self._calculate)
         btn.grid(row=0, column=2, padx=(0, 2), sticky="ew")
-        ToolTip(btn, text="Performs calculation between two dates", bootstyle=INFO)
+        ToolTip(btn, text=t['date_interval']['btn_calc_tooltip'], bootstyle=INFO)
 
     def _create_frame_radio(self) -> None:
         frame = ttk.Frame(self)
         self.configure_grid_layout(frame, rows=1, columns=3)
         frame.pack(padx=10, pady=10, fill="both", expand=True)
 
+        # fix this
         self.interval_type = ttk.StringVar(value="days")
-        ttk.Radiobutton(
-            frame, text="Consecutive Days",
+        r = ttk.Radiobutton(
+            frame, text=t['date_interval']['radio_consec'],
             variable=self.interval_type, value="consecutive"
-        ).grid(row=0, column=0, padx=(2, 0), sticky="w")
-        ttk.Radiobutton(
-            frame, text="Business Days",
+        )
+        r.grid(row=0, column=0, padx=(2, 0), sticky="w")
+        ToolTip(r, t['date_interval']['radio_consec_tooltip'], bootstyle=INFO)
+
+        r = ttk.Radiobutton(
+            frame, text=t['date_interval']['radio_business'],
             variable=self.interval_type, value="business"
-        ).grid(row=0, column=1, padx=(2, 0), sticky="w")
+        )
+        r.grid(row=0, column=1, padx=(2, 0), sticky="w")
+        ToolTip(r, t['date_interval']['radio_business_tooltip'], bootstyle=INFO)
 
         image_info = ttk.PhotoImage(name="info_icon", file=ICON_PATH.joinpath("info.png")).subsample(25)
         info = ttk.Label(frame, image=image_info)
@@ -77,7 +87,7 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
         setattr(info, "_image_info", image_info)  # Prevent garbage collection
         ToolTip(
             info, 
-            text="Allows you to calculate a date from a number of calendar days or business days", 
+            text=t['date_interval']['label_info'], 
             bootstyle=INFO
         )
 
@@ -85,7 +95,7 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
         frame = ttk.Frame(self)
         frame.pack(padx=10, pady=10, fill="both", expand=True)
 
-        ttk.Label(frame, text="Result:").pack(side="left", padx=(2, 0))
+        ttk.Label(frame, text=t['date_interval']['result']).pack(side="left", padx=(2, 0))
 
         self.result_var = ttk.StringVar(
             name="date_with_interval_response", 
@@ -128,4 +138,4 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
                 new_date = start_date + timedelta(days=days)
             self.result_var.set(new_date.strftime("%A, %d de %B de %Y").capitalize())
         else:
-            self.result_var.set("Invalid input")
+            self.result_var.set(t['date_interval']['invalid'])

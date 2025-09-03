@@ -1,7 +1,7 @@
 from typing import final
 from ttkbootstrap import Toplevel
 
-from date_calc.gui import ICON_PATH
+from date_calc import ICON_PATH
 from date_calc.gui.frame_date_difference import ConfigureGridLayout
 
 @final
