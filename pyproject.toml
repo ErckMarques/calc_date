@@ -16,6 +16,8 @@ dependencies = [
     "ttkbootstrap (>=1.14.2,<2.0.0)",
     "python-dateutil (>=2.9.0.post0,<3.0.0)",
     "pystray (>=0.19.5,<0.20.0)",
+    "dynaconf (>=3.2.11,<4.0.0)",
+    "polib (>=1.2.0,<2.0.0)",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -30,7 +32,7 @@ dtcalc-gui = "date_calc.gui.__init__:main"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
-polib = "^1.2.0"
+taskipy = "^1.14.1"
 
 [tool.poetry]
 package-mode = true
