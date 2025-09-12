@@ -1,5 +1,6 @@
 from pathlib import Path
 import ttkbootstrap as ttk
+import logging
 
 ICON_PATH: Path = Path(__file__).parents[1].joinpath("assets")
 

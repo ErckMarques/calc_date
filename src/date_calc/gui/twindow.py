@@ -11,10 +11,10 @@ import pystray
 import ttkbootstrap as ttk
 from PIL import Image
 from tkinter import Event
-from PIL import Image, ImageTk
 from ttkbootstrap import Window, PhotoImage
 from ttkbootstrap.dialogs import Messagebox
 from ttkbootstrap.tooltip import ToolTip
+from ttkbootstrap.dialogs import Messagebox
 
 from date_calc.gui.frame_date_difference import FrameDateDifference
 from date_calc.gui.frame_data_interval import FrameDateWithInterval
@@ -47,10 +47,12 @@ class TWindow(Window, ConfigureGridLayout):
         Configures window and class-level bindings (bind_class)
         """
         self.title(t['main']["app_title"])
-        # self.resizable(False, False)
+        self.resizable(False, False)
         self.bind("<Escape>", lambda e: self.focus_set())
+        
         # Configure grid layout for widgets
         self.configure_grid_layout(self, rows=3, columns=1)
+        
         if sys.platform == "win32":
             self.iconbitmap(ICON_PATH.joinpath("date_calc.ico"), default=ICON_PATH.joinpath("date_calc.ico").as_posix())
         else:
@@ -69,7 +71,7 @@ class TWindow(Window, ConfigureGridLayout):
         else:
             # If icon exists but was stopped, recreate it
             self._tray_icon.stop()
-            self._create_tray_icon()
+            # self._create_tray_icon()
 
     def _create_tray_icon(self) -> None:
         """
@@ -155,12 +157,12 @@ class TWindow(Window, ConfigureGridLayout):
         """Switch the application theme."""
         if self.style.theme_use() == "darkly":
             self.style.theme_use("litera")
-            off_img = PhotoImage(name="off_icon", file=ICON_PATH.joinpath('dark.png')).subsample(30)
-            setattr(button, "_image", off_img)
+            # off_img = PhotoImage(name="off_icon", file=ICON_PATH.joinpath('dark.png')).subsample(30)
+            # setattr(button, "_image", off_img)
         else:
             self.style.theme_use("darkly")
-            on_img = PhotoImage(name="on_icon", file=ICON_PATH.joinpath('light.png')).subsample(30)
-            setattr(button, "_image", on_img)
+            # on_img = PhotoImage(name="on_icon", file=ICON_PATH.joinpath('light.png')).subsample(30)
+            # setattr(button, "_image", on_img)
 
     def _development(self):
         """open the development window"""
@@ -176,15 +178,9 @@ class TWindow(Window, ConfigureGridLayout):
 
     def _top_config(self):
         """open the top configuration window"""
-        top = ttk.Toplevel(title="Configuration")
-        # Add configuration widgets here
-        top.iconbitmap(ICON_PATH.joinpath("config.png"))
-        top.title("Configuration")
-        top.geometry("400x300")
-        ttk.Label(top, text="Configuration Window in development").pack(pady=20)
-        ttk.Label(
-            top, 
-            text=dedent(
+        Messagebox.show_info(
+            title="configuration menu under development".capitalize(),
+            message=dedent(
                 """
                 This button opens the application's configuration page. It should be an inherited TopLevel, specialized in configuration issues.
                     Some configuration options:
@@ -194,9 +190,9 @@ class TWindow(Window, ConfigureGridLayout):
                         In the backend, use a specialized class to receive a JSON or CSV file of holidays, convert it, and save it as structured JSON.
                         Also, extend the functionality of the datetime library with a simple holiday check function, "is_holiday() -> bool". 
                         Receive more than one holiday calendar and select them from a list box (if possible).
-            """,)
-        ).pack(pady=5)
-        top.transient(self)
+            """),
+            parent=self
+        )
 
 if __name__ == "__main__":
     # Example usage of TWindow

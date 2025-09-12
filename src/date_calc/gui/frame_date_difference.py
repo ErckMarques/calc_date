@@ -50,7 +50,7 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         self.start_date.grid(row=0, column=0, padx=(2, 5), sticky="ew")
         ToolTip(self.start_date, t['common']['date_start_tooltip'], bootstyle="info")
 
-        self.end_date = ttk.DateEntry(frame, popup_title="Select End Date", startdate=date.today().replace(day=1))
+        self.end_date = ttk.DateEntry(frame, popup_title="Select End Date", startdate=date.today())
         self.end_date.grid(row=0, column=1, padx=(0, 2), sticky="ew")
         ToolTip(self.end_date, t['date_diff']['date_end_tooltip'], bootstyle="info")
 
@@ -108,11 +108,11 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
                 if start_date.weekday() < 5:  # Monday to Friday are business days
                     business_days += 1
                 start_date += timedelta(days=1)
-            self.business_days_var.set(f"{t["date_diff"]["business_response"]}  {delta.days} {t['common']['days']}")
+            self.business_days_var.set(f"{t["date_diff"]["business_response"]}  {business_days} {t['common']['days']}")
         else:
             self.result_var.set("Invalid dates")
 
     def _reset_date_entries(self) -> None:
         self.start_date.set_date(date.today().replace(day=1))
-        self.end_date.set_date(date.today().replace(day=1))
+        self.end_date.set_date(date.today())
         self.result_var.set(f"{t["date_diff"]["difference_response"]}  0 {t["common"]["days"]}")

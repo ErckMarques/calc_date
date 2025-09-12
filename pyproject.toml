@@ -34,7 +34,7 @@ polib = "^1.2.0"
 
 [tool.poetry]
 package-mode = true
-include = ["tests/*"]
+include = ["tests/*", "src/assets"]
 packages = [
     {include="date_calc", from = "src"}
 ]
