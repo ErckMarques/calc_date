@@ -46,7 +46,7 @@ class TWindow(Window, ConfigureGridLayout):
         """
         Configures window and class-level bindings (bind_class)
         """
-        self.title(t['main']["app_title"])
+        self.title(t("Day Counter and Date Calculator"))
         self.resizable(False, False)
         self.bind("<Escape>", lambda e: self.focus_set())
         
@@ -94,7 +94,7 @@ class TWindow(Window, ConfigureGridLayout):
         self._tray_icon = pystray.Icon(
             "date_calculator", 
             image, 
-            t['main']["tray_icon_tooltip"], 
+            t("Date Calculator"), 
             menu
         )
         self._tray_icon.run_detached()
@@ -138,20 +138,20 @@ class TWindow(Window, ConfigureGridLayout):
         btn_config = ttk.Button(frame, image=image, command=self._development,)
         setattr(btn_config, "_image", image)  # keep a reference!
         btn_config.pack(side="left", padx=5)
-        ToolTip(btn_config, t['main']['btn_config_tooltip'], bootstyle="info")
+        ToolTip(btn_config, t("Open configuration window"), bootstyle="info")
 
         image_tray = PhotoImage(name="tray_icon", file=ICON_PATH.joinpath('ocultar.png')).subsample(30)
         btn_tray = ttk.Button(frame, image=image_tray, command=self._minimize_to_tray)
         setattr(btn_tray, "_image", image_tray)  # keep a reference!
         btn_tray.pack(side="left", padx=5)
-        ToolTip(btn_tray, t['main']['btn_tray_tooltip'], bootstyle="info")
+        ToolTip(btn_tray, t("Minimize to tray system"), bootstyle="info")
 
         # switcher theme
         on_img = PhotoImage(name="on_icon", file=ICON_PATH.joinpath('light.png')).subsample(30)
         swtch_btn = ttk.Button(frame, image=on_img, command=lambda :self._switch_theme(swtch_btn))
         swtch_btn.pack(side='left', padx=5)
         setattr(swtch_btn, "_image", on_img)
-        ToolTip(swtch_btn, text=t['main']['btn_switch_tooltip'], bootstyle="info")
+        ToolTip(swtch_btn, text=t("Switch theme between light and dark mode"), bootstyle="info")
 
     def _switch_theme(self, button: ttk.Button):
         """Switch the application theme."""
