@@ -18,9 +18,8 @@ class DefaultRunner:
     def enter_interactive_mode(self) -> None:
         print("Mode under development.")
     
-    def launch_gui(self) -> None:
-        from date_calc.gui import main
-        
-        main()
-    
-    def _calculate_working_days(self): ...
+    def compile_translations(self, path: str) -> None:
+        from date_calc.translate.compile import compile_po_2_mo
+        if not path:
+            path = None
+        compile_po_2_mo(path)

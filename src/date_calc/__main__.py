@@ -19,5 +19,8 @@ def main():
         days = runner.diff(args.start, args.end)
         print(f"Difference in days: {days}")
 
+    elif args.command == 'compile':
+        runner.compile_translations(args.path)
+
     elif args.command in ['iter', 'initialize', 'init', 'iterative', 'ini']:
         runner.enter_interactive_mode()
