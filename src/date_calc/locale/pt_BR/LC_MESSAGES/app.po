@@ -1,0 +1,116 @@
+# English(en_Us) to Portuguese(pt_BR) translation for app
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: pt\n"
+
+## Main app translation ##
+
+# title translation
+msgid "Day Counter and Date Calculator"
+msgstr "Contador de Dias e Calculadora de Datas"
+
+# tray_icon_tooltip translation
+msgid "Date Calculator"
+msgstr "Calculadora de Datas"
+
+# btn_config_tooltip translation
+msgid "Open configuration window"
+msgstr "Janela de Configurações"
+
+# btn_tray_tooltip translation
+msgid "Minimize to tray system"
+msgstr "Minimizar para a bandeja do sistema"
+
+# btn_switch_tooltip translation
+msgid "Switch theme between light and dark mode"
+msgstr "Alternar tema entre modo claro e escuro"
+
+## Date Diff App Translation ##
+
+# labelf translation
+msgid "Dates Difference"
+msgstr "Diferença de Datas"
+
+# date_end_tooltip translation
+msgid "Select the end date"
+msgstr "Selecione a data de término"
+
+# difference_response translation
+msgid "Difference:"
+msgstr "Diferença:"
+
+# business_response translation
+msgid "Business Days:"
+msgstr "Dias Úteis:"
+
+# btn_calc_tooltip translation
+msgid "Calculates the number of days between selected dates"
+msgstr "Calcula o número de dias entre as datas selecionadas"
+
+# btn_clean_tooltip translation
+msgid "Clears the answer fields and resets the date input fields"
+msgstr "Limpa os campos de respostas e reseta os campos de entrada de datas"
+
+# label_info translation
+msgid "Allows you to calculate the number of calendar days and business days between the dates provided"
+msgstr "Permite calcular a quantidade de dias corridos e dias úteis entre as datas fornecidas"
+
+## Date Interval App Tranlation ##
+
+# labelf translation
+msgid "Date with Interval"
+msgstr "Data com intervalo"
+
+# entry_tooltip translation
+msgid "Enter a positive or negative number of days"
+msgstr "Digite um número, positivo ou negativo, de dias"
+
+# btn_calc_tooltip translation
+msgid "Calculates the new date"
+msgstr "Calcula a nova data"
+
+# radio_consec translation
+msgid "Consecutive Days"
+msgstr "Dias Corridos"
+
+# radio_consec_tooltip translation
+msgid "If checked, performs the calculation for the new date with calendar days"
+msgstr "Se marcado executa o cálculo para a nova data com dias corridos"
+
+# radio_business translation
+msgid "Business Days"
+msgstr "Dias Úteis"
+
+# radio_business_tooltip translation
+msgid "If checked, perform the calculation for the new date with working days"
+msgstr "Se marcado executa o cáluclo para a nova data com dias úteis"
+
+# label_info translation
+msgid "Allows you to calculate a date from a number of calendar days or business days"
+msgstr "Permite calcular uma data a partir de um número de dias corridos ou dias úteis"
+
+# result translation
+msgid "Result:"
+msgstr "Resultado:"
+
+# invalid translation
+msgid "Invalid input"
+msgstr "Entrada Inválida"
+
+## Common Translations ##
+
+# date_start_tooltip translation
+msgid "Select the start date"
+msgstr "Selecione a data de início"
+
+# btn_calculate translation
+msgid "Calculate"
+msgstr "Calcular"
+
+# btn_clear translation
+msgid "Reset"
+msgstr "Limpar"
+
+# days translation
+msgid "days"
+msgstr "dias"
+
