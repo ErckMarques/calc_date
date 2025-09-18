@@ -54,10 +54,10 @@ class TWindow(Window, ConfigureGridLayout):
         self.configure_grid_layout(self, rows=3, columns=1)
         
         if sys.platform == "win32":
-            self.iconbitmap(ICON_PATH.joinpath("date_calc.ico"), default=ICON_PATH.joinpath("date_calc.ico").as_posix())
+            self.iconbitmap(ICON_PATH.joinpath("date_calc.ico"))
         else:
             # Linux and macOS
-            self.iconphoto(True, ICON_PATH.joinpath("date_calc.png"))
+            self.iconphoto(ICON_PATH.joinpath("date_calc.png"))
 
     def _minimize_to_tray(self) -> None:
         """
