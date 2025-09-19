@@ -20,6 +20,5 @@ class DefaultRunner:
     
     def compile_translations(self, path: str) -> None:
         from date_calc.translate.compile import compile_po_2_mo
-        if not path:
-            path = None
+        
         compile_po_2_mo(path)

@@ -20,7 +20,7 @@ def _compile_po_2_mo(po_file: StrOrPathPOFile, domain: str = 'app'):
 
     """
     if isinstance(po_file, str):
-        file = Path(po_file)
+        file = Path(po_file).resolve()
 
     file = cast(Path, po_file)
 
@@ -33,8 +33,8 @@ def _compile_po_2_mo(po_file: StrOrPathPOFile, domain: str = 'app'):
         msg = f"The passed file is not of type '.po', \nPath: {file.as_posix()}"
         raise IsNotPOFileError(msg)
     
-    mo_file = file.with_suffix(".mo").as_posix()
-    nfile = polib.pofile(file)
+    mo_file: str = file.with_suffix(".mo").as_posix()
+    nfile: polib.POFile = polib.pofile(file)
     nfile.save_as_mofile(mo_file)
 
 def compile_po_2_mo(po_file: Optional[StrOrPathPOFile] = None, domain: str = 'app'):

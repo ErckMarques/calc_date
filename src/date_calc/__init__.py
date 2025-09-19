@@ -19,11 +19,10 @@ except Exception as e:
 from date_calc.config import config_locale_app
 config_locale_app()
 
-
+# using gettext
 import gettext
 from date_calc.translate import translate_with_gettext
 try:
-    # using gettext
     _translate = translate_with_gettext(lang='pt_BR')
     _translate.install()
     t = _translate.gettext
