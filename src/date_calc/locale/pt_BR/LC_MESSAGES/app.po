@@ -1,4 +1,6 @@
 # English(en_Us) to Portuguese(pt_BR) translation for app
+msgid ""
+msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: pt\n"
 
