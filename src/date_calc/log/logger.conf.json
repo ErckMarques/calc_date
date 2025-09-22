@@ -28,8 +28,12 @@
     "filters": {
         "()": "date_calc.log.filters.ContextFilter"
     },
-    "handlers": {},
-    "root": {},
+    "handlers": {
+        ""
+    },
+    "root": {
+        "handlers": []
+    },
     "loggers": {
         "date_calc": {"level": "DEBUG"}
     }
