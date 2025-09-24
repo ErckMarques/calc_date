@@ -1,1 +1,21 @@
+[default]
+debug = true
+log_level = "INFO"
+timezone = "UTC"
 
+# Configurações específicas por SO
+[default.unix]
+path_separator = "/"
+temp_dir = "/tmp"
+
+[default.windows]
+path_separator = "\\"
+temp_dir = "C:\\Temp"
+
+[production]
+debug = false
+log_level = "WARNING"
+
+[development]
+debug = true
+log_level = "DEBUG"
