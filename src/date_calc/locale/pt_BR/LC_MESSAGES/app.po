@@ -91,8 +91,8 @@ msgid "Allows you to calculate a date from a number of calendar days or business
 msgstr "Permite calcular uma data a partir de um número de dias corridos ou dias úteis"
 
 # result translation
-msgid "Result:"
-msgstr "Resultado:"
+msgid "New Date:"
+msgstr "Nova Data:"
 
 # invalid translation
 msgid "Invalid input"

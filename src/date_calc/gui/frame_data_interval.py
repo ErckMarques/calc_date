@@ -96,7 +96,7 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
         frame = ttk.Frame(self)
         frame.pack(padx=10, pady=10, fill="both", expand=True)
 
-        ttk.Label(frame, text=t("Result")).pack(side="left", padx=(2, 0))
+        ttk.Label(frame, text=t("New Date:")).pack(side="left", padx=(2, 0))
 
         self.result_var = ttk.StringVar(
             name="date_with_interval_response", 
