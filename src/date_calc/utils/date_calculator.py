@@ -4,9 +4,9 @@ that inherits(?)/encapsulates(?) functionality from datetime.datetime, the nativ
 """
 
 from datetime import date, datetime, timedelta
-from typing import NewType, TypeAlias
+from typing import TypeAlias, Literal
 
-PositiveOrNegativeInt = NewType("PositiveOrNegativeInt", int)
+PositiveOrNegativeInt: TypeAlias = int
 
 class DateCalculator:
     """
@@ -90,3 +90,35 @@ class DateCalculator:
         if initial_date > final_date:
             return 0
         return (final_date - initial_date).days + 1
+    
+    @staticmethod
+    def new_date_with_interval_of_days(
+            *,
+            initial_date: date,
+            interval: PositiveOrNegativeInt,
+            type_of_days: Literal["business", "consecutive"]
+        ) -> date:
+        """
+        Calculate the date after adding a certain number of business days to an initial date.
+
+        Args:
+            initial_date (date): The starting date.
+            interval (int): The number of business days to add.
+            type_of_days (str): The type of days to consider ("business" or "consecutive").
+
+        Returns:
+            date: The new date after adding the business days.
+        """
+        current_date = initial_date
+        days_added = 0
+        step = 1 if interval > 0 else -1
+        
+        if type_of_days == "consecutive":
+            return current_date + timedelta(days=interval)
+        
+        while days_added < abs(interval):
+            if current_date.weekday() < 5:  # Monday to Friday are business days
+                days_added += 1
+            current_date += timedelta(days=step)
+
+        return current_date
