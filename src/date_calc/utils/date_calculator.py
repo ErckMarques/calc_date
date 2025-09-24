@@ -89,7 +89,7 @@ class DateCalculator:
         """
         if initial_date > final_date:
             return 0
-        return (final_date - initial_date).days + 1
+        return (final_date - initial_date).days
     
     @staticmethod
     def new_date_with_interval_of_days(
