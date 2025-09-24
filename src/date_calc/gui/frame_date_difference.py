@@ -6,6 +6,7 @@ from ttkbootstrap.tooltip import ToolTip
 
 from date_calc import TkContainer, ICON_PATH, t
 from date_calc.gui.utils.grid_layout import ConfigureGridLayout
+from date_calc.utils.date_calculator import DateCalculator
 
 @final
 class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
@@ -100,14 +101,10 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         start_date = self.start_date.get_date()
         end_date = self.end_date.get_date()
         if start_date and end_date:
-            delta = end_date - start_date
-            self.result_var.set(f"{t("Difference:")}  {delta.days} {t("days")}")
-            # colocar um relatório com dias úteis e finais de semana
-            business_days = 0
-            while start_date < end_date:
-                if start_date.weekday() < 5:  # Monday to Friday are business days
-                    business_days += 1
-                start_date += timedelta(days=1)
+            consec_days = DateCalculator.date_difference(start_date, end_date)
+            business_days = DateCalculator.business_days(initial_date=start_date, final_date=end_date)
+            
+            self.result_var.set(f"{t("Difference:")}  {consec_days} {t("days")}") 
             self.business_days_var.set(f"{t("Business Days:")}  {business_days} {t("days")}")
         else:
             self.result_var.set("Invalid dates")

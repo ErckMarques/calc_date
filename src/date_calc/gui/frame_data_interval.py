@@ -10,6 +10,7 @@ from ttkbootstrap.constants import INFO, DANGER, PRIMARY
 
 from date_calc import TkContainer, ICON_PATH, t
 from date_calc.gui.frame_date_difference import ConfigureGridLayout
+from date_calc.utils.date_calculator import DateCalculator
 
 @final
 class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
@@ -121,21 +122,14 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
         # Get the start date and number of days from the user input
         start_date = self.start_date.get_date()
         days = self.days.get()
+        type_of_days = self.interval_type.get()
         # checks if there is any entry
         if start_date and days:
-            # check if the interval type is business
-            if self.interval_type.get() == "business":
-                current_date = start_date
-                added_days: int = 0  # control variable
-                # calculate the new date manually
-                while added_days < days:
-                    current_date += timedelta(days=1)
-                    # check if the current date is a weekday
-                    if current_date.weekday() < 5:
-                        added_days += 1
-                new_date = current_date
-            else:
-                new_date = start_date + timedelta(days=days)
+            new_date = DateCalculator.new_date_with_interval_of_days(
+                initial_date=start_date,
+                interval=days,
+                type_of_days=type_of_days # type: ignore
+            )
             self.result_var.set(new_date.strftime("%A, %d de %B de %Y").capitalize())
         else:
             self.result_var.set(t("Invalid Input"))
