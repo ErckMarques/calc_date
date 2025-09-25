@@ -94,9 +94,17 @@ msgstr "Permite calcular uma data a partir de um número de dias corridos ou dia
 msgid "New Date:"
 msgstr "Nova Data:"
 
-# invalid translation
-msgid "Invalid input"
+# invalid input
+msgid "Invalid Input"
 msgstr "Entrada Inválida"
+
+# invalid input messagebox
+msgid "Invalid calculation options. Select one of the following options: 'Business Days', 'Calendar Days'."
+msgstr "Opções inválidas para o cáculo. Selecione uma das opções: 'Dias Úteis', 'Dias Corridos'."
+
+# input must be different from 0
+msgid "The interval reported must be different from 0."
+msgstr "O intervalo informado deve ser diferente de 0."
 
 ## Common Translations ##
 
@@ -109,7 +117,7 @@ msgid "Calculate"
 msgstr "Calcular"
 
 # btn_clear translation
-msgid "Reset"
+msgid "Clear"
 msgstr "Limpar"
 
 # days translation
