@@ -2,6 +2,8 @@
 debug = true
 log_level = "INFO"
 timezone = "UTC"
+DEFAULT_LOCALES_PATH = "C:\Users\PC\python_projects\calc_dates\src\date_calc\locale"
+ICON_PATH = "C:\Users\PC\python_projects\calc_dates\src\date_calc\assets"
 
 # Configurações específicas por SO
 [default.unix]
