@@ -5,6 +5,7 @@ from typing import final
 
 from PIL import Image, ImageDraw, ImageTk
 import ttkbootstrap as ttk
+from ttkbootstrap.dialogs import Messagebox
 from ttkbootstrap.tooltip import ToolTip
 from ttkbootstrap.constants import INFO, DANGER, PRIMARY
 
@@ -47,7 +48,7 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
         self.start_date.grid(row=0, column=0, padx=(2, 5), sticky="ew")
         ToolTip(self.start_date, text=t("Select Start Date"), bootstyle=INFO)
 
-        self.days = ttk.IntVar(name="input_days")
+        self.days = ttk.IntVar(name="input_days", value=0)
         entry = ttk.Entry(frame, textvariable=self.days)
         entry.bind("<FocusIn>", self._entry_event_in)
         entry.bind("<KeyPress>", self._entry_event_out)
@@ -122,7 +123,19 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
         # Get the start date and number of days from the user input
         start_date = self.start_date.get_date()
         days = self.days.get()
-        type_of_days = self.interval_type.get()
+
+        if (type_of_days := self.interval_type.get()) not in ("consecutive", "business"):
+            Messagebox.show_error(
+                title=t("Invalid Input"),
+                message=t("Invalid calculation options. Select one of the following options: 'Business Days', 'Calendar Days'.")
+            )
+            self.result_var.set(t("Invalid Input"))
+            return
+
+        if days == 0:
+            self.result_var.set(t("The interval reported must be different from 0."))
+            return
+
         # checks if there is any entry
         if start_date and days:
             new_date = DateCalculator.new_date_with_interval_of_days(
@@ -131,5 +144,3 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
                 type_of_days=type_of_days # type: ignore
             )
             self.result_var.set(new_date.strftime("%A, %d de %B de %Y").capitalize())
-        else:
-            self.result_var.set(t("Invalid Input"))

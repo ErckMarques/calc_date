@@ -76,7 +76,7 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         setattr(info, "_image_info", image_info)  # Prevent garbage collection
         ToolTip(
             info, 
-            text=t("Allows you to calculate the difference between two dates"), 
+            text=t("Allows you to calculate the number of calendar days and business days between the dates provided"), 
             bootstyle=INFO
         )
 
