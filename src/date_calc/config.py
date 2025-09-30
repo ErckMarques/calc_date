@@ -55,4 +55,4 @@ def load_config() -> Dynaconf:
     except ValidationError as e:
         logger.exception("Error loading configuration: %s", e)
 
-    return settings
+    return settings 
