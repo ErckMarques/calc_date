@@ -4,6 +4,7 @@ from pathlib import Path
 import logging
 
 from dynaconf import Dynaconf, Validator, ValidationError
+from date_calc.exceptions import ConfigurationError
 
 logger = logging.getLogger(__name__)
 
@@ -31,28 +32,40 @@ def load_config() -> Dynaconf:
     logger.debug(f"Root path for configuration: {ROOT_PATH}")
 
     try:
-        logger.debug(f"SETTINGS path for configuration: {SETTINGS_PATH}, exists: {SETTINGS_PATH.exists()}")
         settings = Dynaconf(
             settings_files=[SETTINGS_PATH],
-            
-            # Prefixo para variáveis de ambiente
             envvar_prefix="DTC",
-            
-            # Suporte a múltiplos ambientes
             environments=True,
             default_env='default',
-            
-            # Mescla variáveis de ambiente com arquivos
             merge_enabled=True,
-
-            # Validações para garantir que certas configurações estejam presentes
             validators=[
                 Validator("DEFAULT_LOCALES_PATH", must_exist=True, cast=Path),
                 Validator("ICON_PATH", must_exist=True, cast=Path),
                 Validator("TIMEZONE", must_exist=True, is_type_of=str),
             ],
         )
+        
+        logger.info("✅ Configurações carregadas com sucesso")
+        logger.debug(f"Ambiente: {settings.current_env}")
+        
+        return settings
+        
     except ValidationError as e:
-        logger.exception("Error loading configuration: %s", e)
-
-    return settings 
+        logger.error(
+            "❌ Validação de configuração falhou", 
+            extra={
+                'original_error': str(e.__cause__),
+                'error_type': type(e.__cause__).__name__
+            }
+        )
+        raise ConfigurationError(f"Configuração inválida: {e}") from e
+        
+    except Exception as e:
+        logger.error(
+            "❌ Erro inesperado ao carregar configurações",
+            extra={
+                'original_error': str(e.__cause__),
+                'error_type': type(e.__cause__).__name__
+            }
+        )
+        raise ConfigurationError(f"Falha ao carregar configurações: {e}") from e
