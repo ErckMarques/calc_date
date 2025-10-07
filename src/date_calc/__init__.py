@@ -15,6 +15,8 @@ try:
 except Exception as e:
     logging.warning(f"Failed to install rich traceback: {e}")
 
+from date_calc.config import load_config
+settings = load_config()
 
 from date_calc.config import config_locale_app
 config_locale_app()
