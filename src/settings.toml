@@ -1,23 +1,15 @@
 [default]
 debug = true
-log_level = "INFO"
+LOG_LEVEL = "INFO"
 timezone = "UTC"
-DEFAULT_LOCALES_PATH = "C:\Users\PC\python_projects\calc_dates\src\date_calc\locale"
-ICON_PATH = "C:\Users\PC\python_projects\calc_dates\src\date_calc\assets"
-
-# Configurações específicas por SO
-[default.unix]
-path_separator = "/"
-temp_dir = "/tmp"
-
-[default.windows]
-path_separator = "\\"
-temp_dir = "C:\\Temp"
+DEFAULT_LOCALES_PATH = "C:\\Users\\PC\\python_projects\\calc_dates\\src\\date_calc\\locale"
+ICON_PATH = "C:\\Users\\PC\\python_projects\\calc_dates\\src\\date_calc\\assets"
+TIMEZONE = "America/Recife"
 
 [production]
 debug = false
-log_level = "WARNING"
+LOG_LEVEL = "WARNING"
 
 [development]
 debug = true
-log_level = "DEBUG"
+LOG_LEVEL = "DEBUG"
