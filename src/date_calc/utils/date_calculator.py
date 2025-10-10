@@ -117,8 +117,10 @@ class DateCalculator:
             return current_date + timedelta(days=interval)
         
         while days_added < abs(interval):
-            if current_date.weekday() < 5:  # Monday to Friday are business days
+            if current_date.weekday() <= 5:  # Monday to Friday are business days
                 days_added += 1
             current_date += timedelta(days=step)
-
+            
+            while current_date.weekday() >= 5:  # Skip weekends
+                current_date += timedelta(days=step)
         return current_date

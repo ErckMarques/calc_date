@@ -113,3 +113,4 @@ class FrameDateDifference(ttk.Labelframe, ConfigureGridLayout):
         self.start_date.set_date(date.today().replace(day=1))
         self.end_date.set_date(date.today())
         self.result_var.set(f"{t("Difference:")}  0 {t("days")}")
+        self.business_days_var.set(f"{t("Business Days:")}  0 {t("days")}")
