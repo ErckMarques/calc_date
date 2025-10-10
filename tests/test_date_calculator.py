@@ -39,3 +39,14 @@ def test_consecutive_days_with_negative_interval():
         type_of_days="consecutive"
     )
     assert result == datetime(2025, 8, 30).date()
+
+def test_new_date_with_business_days_negative_interval(): 
+    initial_date = datetime(2025, 10, 1).date() # wednesday's
+    interval = -3 # 3 business days back, date should be 2025-09-26
+
+    result = DateCalculator.new_date_with_interval_of_days(
+        initial_date=initial_date,
+        interval=interval,
+        type_of_days="business"
+    )
+    assert result == datetime(2025, 9, 26).date()
