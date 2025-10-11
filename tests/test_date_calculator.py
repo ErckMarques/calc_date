@@ -1,3 +1,4 @@
+import pytest
 from datetime import datetime
 
 from date_calc.utils.date_calculator import DateCalculator
@@ -40,13 +41,17 @@ def test_consecutive_days_with_negative_interval():
     )
     assert result == datetime(2025, 8, 30).date()
 
-def test_new_date_with_business_days_negative_interval(): 
-    initial_date = datetime(2025, 10, 1).date() # wednesday's
-    interval = -3 # 3 business days back, date should be 2025-09-26
-
+@pytest.mark.parametrize(
+    "initial_date,interval,expected_date",
+    [
+        (datetime(2025, 10, 1).date(), -3, datetime(2025, 9, 26).date()),  # Wednesday -3 business days = previous Friday
+        (datetime(2025, 10, 10).date(), 1, datetime(2025, 10, 13).date()),  # Friday +1 business day = next Monday
+    ]
+)
+def test_new_date_with_business_days_negative_interval(initial_date, interval, expected_date):
     result = DateCalculator.new_date_with_interval_of_days(
         initial_date=initial_date,
         interval=interval,
         type_of_days="business"
     )
-    assert result == datetime(2025, 9, 26).date()
+    assert result == expected_date
