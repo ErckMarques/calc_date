@@ -5,7 +5,7 @@ ICON_PATH: Path = Path(__file__).parent.joinpath("assets")
 
 
 import ttkbootstrap as ttk
-type TkContainer = ttk.Window | ttk.Frame | ttk.Labelframe
+type TkContainer = ttk.Window | ttk.Frame | ttk.Labelframe | ttk.Toplevel
 
 
 from rich.traceback import install
