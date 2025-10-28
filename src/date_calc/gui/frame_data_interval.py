@@ -42,11 +42,11 @@ class FrameDateWithInterval(ttk.Labelframe, ConfigureGridLayout):
 
         self.start_date = ttk.DateEntry(
             frame,
-            popup_title="Select Start Date",
+            popup_title=t("Select the start date"),
             startdate=date.today().replace(day=1)
         )
         self.start_date.grid(row=0, column=0, padx=(2, 5), sticky="ew")
-        ToolTip(self.start_date, text=t("Select Start Date"), bootstyle=INFO)
+        ToolTip(self.start_date, text=t("Select the start date"), bootstyle=INFO)
 
         self.days = ttk.IntVar(name="input_days", value=0)
         entry = ttk.Entry(frame, textvariable=self.days)

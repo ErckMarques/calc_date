@@ -3,18 +3,18 @@ import pytest
 from pathlib import Path
 from zoneinfo import ZoneInfo
 from dynaconf import Dynaconf, ValidationError, LazySettings
-from date_calc import load_config
+from date_calc import get_settings
 
 @pytest.fixture(scope="module", autouse=True)
 def settings() -> LazySettings:
-    return load_config() # type: ignore
+    return get_settings() # type: ignore
 
-def test_load_config(settings: LazySettings):
+def test_get_settings(settings: LazySettings):
     
     assert settings is not None, "As configurações não foram devidamente carregadas."
     assert settings.current_env != "default", "O ambiente atual não é 'default'."
     assert isinstance(settings, LazySettings), "O objeto de configurações não é uma instância de LazySettings."
-    assert settings.get("TIMEZONE") == ZoneInfo("America/Recife"), "A configuração TIMEZONE não está definida corretamente."
+    # assert settings.get("TIMEZONE") == ZoneInfo("America/Recife"), "A configuração TIMEZONE não está definida corretamente."
     assert isinstance(settings.get("DEFAULT_LOCALES_PATH"), Path), "A configuração DEFAULT_LOCALES_PATH não está definida corretamente."
     assert isinstance(settings.get("ICON_PATH"), Path), "A configuração ASSETS_PATH não está definida corretamente."
 

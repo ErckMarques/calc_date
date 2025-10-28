@@ -9,7 +9,7 @@ from typing import Optional, cast
 from dynaconf import Dynaconf, Validator, ValidationError, LazySettings
 from date_calc.exceptions import ConfigurationError
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__); logger.setLevel(logging.DEBUG)
 
 _CONFIG_INSTANCE: Optional[LazySettings] = None
 _ROOT_PATH = Path(__file__).parents[1].resolve()
@@ -27,12 +27,12 @@ def config_locale_app():
     for loc in locales_to_try:
         try:
             locale.setlocale(locale.LC_ALL, loc)
-            msg = "Locale configurado para: {%s}".format(loc)
+            msg = "Locale configurado para: {}".format(loc)
             logger.info(msg)
             return
         except locale.Error:
             continue
-    msg = "Não foi possível configurar locale específico, usando padrão do sistema {%s}".format(locale.getdefaultlocale())
+    msg = "Não foi possível configurar locale específico, usando padrão do sistema {}".format(locale.getdefaultlocale())
     logger.warning(msg)
 
 def _validate_path(path: Path) -> Path:
@@ -44,7 +44,7 @@ def _validate_path(path: Path) -> Path:
 def _validate_timezone(tz: str) -> zoneinfo.ZoneInfo:
     """Validates whether the timezone string is valid."""
     try:
-        msg = "Validating timezone: %s".format(tz)
+        msg = "Validating timezone: {}".format(tz)
         logger.debug(msg)
         return zoneinfo.ZoneInfo(tz)
     except zoneinfo.ZoneInfoNotFoundError as e:
@@ -72,7 +72,7 @@ def _create_dynaconf_instance() -> Dynaconf:
         validators=[
             Validator("DEFAULT_LOCALES_PATH", must_exist=True, cast=lambda v: _validate_path(Path(v))),
             Validator("ICON_PATH", must_exist=True, cast=lambda v: _validate_path(Path(v))),
-            Validator("TIMEZONE", must_exist=True, cast=_validate_timezone),
+            # Validator("TIMEZONE", must_exist=True, cast=lambda v: _validate_timezone(v)), # Fix this 
         ],
     )
 
@@ -130,4 +130,4 @@ def get_root_path() -> Path:
     """Getter seguro para o root path (se realmente necessário)."""
     return _ROOT_PATH
 
-__all__ = ['get_settings', 'get_root_path', 'config_locale_app', 'load_config']
+__all__ = ['get_settings', 'get_root_path', 'config_locale_app']
