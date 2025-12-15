@@ -1,8 +1,8 @@
 [default]
 debug = true
 LOG_LEVEL = "INFO"
-DEFAULT_LOCALES_PATH = "C:\\Users\\Estudos\\Documents\\calc_date\\src\\date_calc\\locale"
-ICON_PATH = "C:\\Users\\Estudos\\Documents\\calc_date\\src\\date_calc\\assets"
+DEFAULT_LOCALES_PATH = "src\\date_calc\\locale"
+ICON_PATH = "src\\date_calc\\assets"
 TIMEZONE = "America/Recife"
 
 [production]
