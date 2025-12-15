@@ -116,6 +116,7 @@ class DateCalculator:
         if type_of_days == "consecutive":
             return current_date + timedelta(days=interval)
         
+        # import pdb; pdb.set_trace()
         while days_added < abs(interval):
             if current_date.weekday() <= 5:  # Monday to Friday are business days
                 days_added += 1
@@ -124,3 +125,9 @@ class DateCalculator:
             while current_date.weekday() >= 5:  # Skip weekends
                 current_date += timedelta(days=step)
         return current_date
+    
+if __name__ == "__main__":
+
+    initial_date, interval, expected_date = (datetime(2025, 10, 6).date(), 25, datetime(2025, 11, 10).date())
+    new_date = DateCalculator.new_date_with_interval_of_days(initial_date=initial_date, interval=interval, type_of_days='business')
+    print(new_date == expected_date)

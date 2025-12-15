@@ -27,7 +27,7 @@ def config_locale_app():
     for loc in locales_to_try:
         try:
             locale.setlocale(locale.LC_ALL, loc)
-            msg = "Locale configurado para: {%s}".format(loc)
+            msg = "Locale configurado para: {}".format(loc)
             logger.info(msg)
             return
         except locale.Error:
@@ -35,11 +35,16 @@ def config_locale_app():
     msg = "Não foi possível configurar locale específico, usando padrão do sistema {%s}".format(locale.getdefaultlocale())
     logger.warning(msg)
 
-def _validate_path(path: Path) -> Path:
+def _validate_path(path: Path | str) -> Path:
     """Validates whether the path exists, and consequently, whether it is also valid."""
-    if not path.exists():
+    if isinstance(path, str):
+        abs_path = Path(path).resolve()
+    else: 
+        abs_path = path.resolve()
+
+    if not abs_path.exists():
         raise FileNotFoundError(f"The specified path does not exist: {path}")
-    return path
+    return abs_path
 
 def _validate_timezone(tz: str) -> zoneinfo.ZoneInfo:
     """Validates whether the timezone string is valid."""
@@ -70,9 +75,9 @@ def _create_dynaconf_instance() -> Dynaconf:
         default_env='default',
         merge_enabled=True,
         validators=[
-            Validator("DEFAULT_LOCALES_PATH", must_exist=True, cast=lambda v: _validate_path(Path(v))),
-            Validator("ICON_PATH", must_exist=True, cast=lambda v: _validate_path(Path(v))),
-            Validator("TIMEZONE", must_exist=True, cast=_validate_timezone),
+            Validator("DEFAULT_LOCALES_PATH", must_exist=True, cast=lambda v: _validate_path(v)),
+            Validator("ICON_PATH", must_exist=True, cast=lambda v: _validate_path(v)),
+            # Validator("TIMEZONE", must_exist=True, cast=_validate_timezone),
         ],
     )
 
