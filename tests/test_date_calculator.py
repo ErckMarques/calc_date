@@ -46,6 +46,7 @@ def test_consecutive_days_with_negative_interval():
     [
         (datetime(2025, 10, 1).date(), -3, datetime(2025, 9, 26).date()),  # Wednesday -3 business days = previous Friday
         (datetime(2025, 10, 10).date(), 1, datetime(2025, 10, 13).date()),  # Friday +1 business day = next Monday
+        (datetime(2025, 10, 6).date(), 25, datetime(2025, 11, 10).date()) # Monday +25 busines day = Monday, 10/11/2025
     ]
 )
 def test_new_date_with_business_days_negative_interval(initial_date, interval, expected_date):
