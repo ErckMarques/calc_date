@@ -9,7 +9,7 @@ from typing import Optional, cast
 from dynaconf import Dynaconf, Validator, ValidationError, LazySettings
 from date_calc.exceptions import ConfigurationError
 
-logger = logging.getLogger(__name__); logger.setLevel(logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 _CONFIG_INSTANCE: Optional[LazySettings] = None
 _ROOT_PATH = Path(__file__).parents[1].resolve()
@@ -32,19 +32,24 @@ def config_locale_app():
             return
         except locale.Error:
             continue
-    msg = "Não foi possível configurar locale específico, usando padrão do sistema {}".format(locale.getdefaultlocale())
+    msg = "Não foi possível configurar locale específico, usando padrão do sistema {%s}".format(locale.getdefaultlocale())
     logger.warning(msg)
 
-def _validate_path(path: Path) -> Path:
+def _validate_path(path: Path | str) -> Path:
     """Validates whether the path exists, and consequently, whether it is also valid."""
-    if not path.exists():
+    if isinstance(path, str):
+        abs_path = Path(path).resolve()
+    else: 
+        abs_path = path.resolve()
+
+    if not abs_path.exists():
         raise FileNotFoundError(f"The specified path does not exist: {path}")
-    return path
+    return abs_path
 
 def _validate_timezone(tz: str) -> zoneinfo.ZoneInfo:
     """Validates whether the timezone string is valid."""
     try:
-        msg = "Validating timezone: {}".format(tz)
+        msg = "Validating timezone: %s".format(tz)
         logger.debug(msg)
         return zoneinfo.ZoneInfo(tz)
     except zoneinfo.ZoneInfoNotFoundError as e:
@@ -70,9 +75,9 @@ def _create_dynaconf_instance() -> Dynaconf:
         default_env='default',
         merge_enabled=True,
         validators=[
-            Validator("DEFAULT_LOCALES_PATH", must_exist=True, cast=lambda v: _validate_path(Path(v))),
-            Validator("ICON_PATH", must_exist=True, cast=lambda v: _validate_path(Path(v))),
-            # Validator("TIMEZONE", must_exist=True, cast=lambda v: _validate_timezone(v)), # Fix this 
+            Validator("DEFAULT_LOCALES_PATH", must_exist=True, cast=lambda v: _validate_path(v)),
+            Validator("ICON_PATH", must_exist=True, cast=lambda v: _validate_path(v)),
+            # Validator("TIMEZONE", must_exist=True, cast=_validate_timezone),
         ],
     )
 
@@ -130,4 +135,4 @@ def get_root_path() -> Path:
     """Getter seguro para o root path (se realmente necessário)."""
     return _ROOT_PATH
 
-__all__ = ['get_settings', 'get_root_path', 'config_locale_app']
+__all__ = ['get_settings', 'get_root_path', 'config_locale_app', 'load_config']
